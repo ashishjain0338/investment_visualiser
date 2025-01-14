@@ -4,7 +4,8 @@ import { HomePage } from './components/homepage/homepage';
 import { NavBar } from './components/navbar/nav_bar';
 // PlayGround
 // import { HomePageClass } from './components/playground/classhomepage/classHomePage';
-// import { LightModeNavBar} from './components/playground/play/play';
+import { TrendPlot } from './components/playground/play/plot';
+
 
 function App() {
   return (
@@ -12,26 +13,10 @@ function App() {
         <NavBar />
         <BrowserRouter>
           <Routes>
-            <Route path="/home" element={<HomePage/>} />
-            {/* <Route path="/play" element={<LightModeNavBar/>} /> */}
+            <Route path="/" element={<HomePage/>} />
+            <Route path="/play" element={<TrendPlot/>} />
           </Routes>
         </BrowserRouter>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-        <p>Your World</p>
-
       </div>
   );
 }

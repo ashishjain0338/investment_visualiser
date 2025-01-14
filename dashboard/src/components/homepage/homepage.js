@@ -1,8 +1,10 @@
+import { TrendPlot } from "../line-plot/line_plot"
+
 function HomePage(){
     // Returning the HTML-DOM
     return (
         <div>
-            <p>Hello World</p>
+            <TrendPlot />
         </div>
     )
 }
