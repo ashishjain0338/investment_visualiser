@@ -1,4 +1,4 @@
-import { daysToQuaters, convertPeriodToYears } from "./util.js";
+import { daysToQuaters, convertPeriodToYears, updateObjUsingAttrName } from "./util.js";
 
 class FD{
     #private_attr
@@ -257,7 +257,7 @@ function test_suite_days(days){
 
 function main(){
     console.debug = () => {};
-    big_test_suite(5);
+    // big_test_suite(5);
     // test_suite(10);
     // const obj = new FD(100, 10);
     // let period = 4;
@@ -269,7 +269,12 @@ function main(){
     // console.assert(Math.abs(got - expected) <= 2, "Compund-Interest-Compunded-Monthly : Test-Failed: Not equal " + `${got} == ${expected}`);
 
     
+    const obj = new FD(1000, 10);
+    console.log(obj)
+    updateObjUsingAttrName(obj, "principal", 123);
     
+    updateObjUsingAttrName(obj, "principal2", 123);
+    console.log(obj)
 }
 
 main();

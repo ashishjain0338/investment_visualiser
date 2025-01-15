@@ -1,4 +1,6 @@
 .mycard{
+    /* width: 50%; */
+    /* margin: 10px; */
     border: 2px solid transparent; /* Set an initial transparent border */
     transition: border-color 0.3s ease; /* Smooth transition for hover effect */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for the default state */
@@ -7,10 +9,9 @@
 .mycard:hover {
     border-style: solid;
     border-width: 2px;
-    /* border-color: rgb(84, 142, 201); */
-    border-color: #86b7fe;
+    border-color: rgb(84, 142, 201);
     /* Stronger shadow for the lifted effect */
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2); */
     /* Lift the card slightly upwards */
-    transform: translateY(-10px); 
+    /* transform: translateY(-10px);  */
 }

@@ -31,3 +31,11 @@ export function convertPeriodToYears(period, format){
             return -1;
     }
 }
+
+export function updateObjUsingAttrName(obj, attr, attrValue){
+    if(attr in obj){
+        obj[attr] = attrValue;
+    }else{
+        console.warn(`Attribute ${attr} doesn't belong to the given Object : ${obj}`)
+    }
+}
