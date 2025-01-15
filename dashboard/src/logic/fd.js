@@ -16,7 +16,7 @@ class FD {
     constructor(title="Fixed-Deposit",principal = 0, rate = 0, period = 0, cumulative_freq = 0, premature = 0, data = []) {
         this.title = title;
         this.principal = principal;
-        this.rate = rate / 100;
+        this.rate = rate; //rate is in %
         this.period = period;
         this.cumulative_freq = cumulative_freq;
         this.data = data;
@@ -38,7 +38,24 @@ class FD {
     }
 
     updateField(attrName, value) {
-        console.log("Updating Fd Object with attrName " + attrName + " and value as " + value)
+        // console.log("Updating Fd Object with attrName " + attrName + " and value as " + value)
+        switch (attrName){
+            case 'principal':
+            case 'rate':
+            case 'period':
+            case 'premature':
+                value = parseFloat(value);
+                if (isNaN(value)){
+                    value = 0;
+                }
+            case 'cumulative_freq':
+                value = parseInt(value);
+                if (isNaN(value)){
+                    value = 0;
+                }
+            default:
+                // Do nothing
+        }
         updateObjUsingAttrName(this, attrName, value);
     }
 
@@ -49,13 +66,14 @@ class FD {
     */
     calculate(period) {
         // let out = new Float32Array(period + 1); // Quaterly data
+        let rate = this.rate / 100;
         let out = new Array(period + 1);
         let quaterInterest = 0;
         switch (this.cumulative_freq) {
 
             case 0:
                 // Simple-Interest
-                quaterInterest = this.principal * this.rate / 4;
+                quaterInterest = this.principal * rate / 4;
                 out[0] = this.principal;
                 for (let i = 1; i < out.length; i++) {
                     out[i] = out[i - 1] + quaterInterest;
@@ -63,14 +81,14 @@ class FD {
 
                 break;
             case 1:
-                let monthlyInterest = this.principal * this.rate / 12;
+                let monthlyInterest = this.principal * rate / 12;
                 let k = 1;
                 out[0] = this.principal;
                 let cur = this.principal;
                 for (let i = 0; i < 3 * period; i++) {
                     cur += monthlyInterest;
                     // Month passed, Update interest
-                    monthlyInterest = cur * this.rate / 12;
+                    monthlyInterest = cur * rate / 12;
                     if (i % 3 == 2) {
                         // 3-Months passed, Update in out
                         out[k++] = cur;
@@ -79,38 +97,38 @@ class FD {
                 break;
             case 4:
                 // Quateryly Cumulative
-                quaterInterest = this.principal * this.rate / 4;
+                quaterInterest = this.principal * rate / 4;
                 out[0] = this.principal;
                 for (let i = 1; i < out.length; i++) {
                     out[i] = out[i - 1] + quaterInterest;
                     // Quater has passed, Update Interest
-                    quaterInterest = out[i] * this.rate / 4;
+                    quaterInterest = out[i] * rate / 4;
 
                 }
                 break;
             case 6:
                 // Twice in year Cumulative
-                quaterInterest = this.principal * this.rate / 4;
+                quaterInterest = this.principal * rate / 4;
                 out[0] = this.principal;
                 for (let i = 1; i < out.length; i++) {
 
                     out[i] = out[i - 1] + quaterInterest;
                     if (i % 2 == 0) {
                         // 6 Months has passed, Update Interest
-                        quaterInterest = out[i] * this.rate / 4;
+                        quaterInterest = out[i] * rate / 4;
                     }
                 }
                 break;
             case 12:
                 // Annual Cumulative
-                quaterInterest = this.principal * this.rate / 4;
+                quaterInterest = this.principal * rate / 4;
                 out[0] = this.principal;
                 for (let i = 1; i < out.length; i++) {
 
                     out[i] = out[i - 1] + quaterInterest;
                     if (i % 4 == 0) {
                         // Year has passed, Update Interest
-                        quaterInterest = out[i] * this.rate / 4;
+                        quaterInterest = out[i] * rate / 4;
                     }
                 }
                 break;
@@ -128,25 +146,25 @@ class FD {
         y: years
     */
     byFormula(period, format = 'y') {
-
+        let rate = this.rate/100;
         let time = convertPeriodToYears(period, format);
         console.debug("byFormula-period : ", time);
         let out = -1;
         switch (this.cumulative_freq) {
             case 0:
-                out = this.principal + this.principal * this.rate * time;
+                out = this.principal + this.principal * rate * time;
                 break;
             case 1:
-                out = this.principal * (1 + this.rate / 12) ** (12 * time);
+                out = this.principal * (1 + rate / 12) ** (12 * time);
                 break;
             case 4:
-                out = this.principal * (1 + this.rate / 4) ** (4 * time);
+                out = this.principal * (1 + rate / 4) ** (4 * time);
                 break;
             case 6:
-                out = this.principal * (1 + this.rate / 2) ** (2 * time);
+                out = this.principal * (1 + rate / 2) ** (2 * time);
                 break;
             case 12:
-                out = this.principal * (1 + this.rate) ** time;
+                out = this.principal * (1 + rate) ** time;
                 break;
         }
         return out;
@@ -157,20 +175,30 @@ class FD {
         The current implementation may produce slight inaccuracies when cumulative_freq equals 1, with deviations potentially around 0.1%
     */
     calculateFromDays(days) {
-        // console.log("Here -->", daysToQuaters(days));
+        console.log("CheckDays --> ", days)
+        if (days == 0 || days == undefined){
+            return [];
+        }
+        console.log("Here -->", daysToQuaters(days));
+        let rate = this.rate / 100;
         const [quaterCount, daysLeft] = daysToQuaters(days);
         let out = this.calculate(quaterCount);
+        // console.log(out);
+        if(daysLeft == 0){
+            return out;
+        }
         // For rest-days
         let interestLastDays = 0;
+        console.log("Check Cumulative Frequency --> ", this.cumulative_freq)
         switch (this.cumulative_freq) {
             case 0:
-                interestLastDays = this.principal * this.rate * daysLeft / 365;
+                interestLastDays = this.principal * rate * daysLeft / 365;
                 break;
             case 1:
             case 4:
             case 6:
             case 12:
-                interestLastDays = (out[out.length - 1]) * this.rate * daysLeft / 365;
+                interestLastDays = (out[out.length - 1]) * rate * daysLeft / 365;
                 break;
             default:
                 console.error(`Cumulative-Frequency ${this.cumulative_freq} NOT SUPPORTED`)

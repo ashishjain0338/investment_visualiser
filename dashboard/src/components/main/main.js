@@ -6,12 +6,24 @@ import { useState, useCallback } from "react"
 import { FD } from "../../logic/fd"
 import { RawData } from "../../logic/rawdata"
 
-let testStateLen1 = [new FD("First",1000, 7, 365, 0)]
+let testStateLen1 = [new FD("First", 1000, 7, 1000, 0)]
+let testStateLen10 = []
+for (let i = 0; i < 10; i++) {
+    testStateLen10.push(new FD("First_" + i, 1000, 7 + i, 1000, 0));
+}
 
 function Main() {
-    const [state, setState] = useState(testStateLen1)
+    const [state, setState] = useState(testStateLen10)
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
+
+    const [percentageView, setpercentageView] = useState(false);
+
+    const handleToggle = () => {
+        const newState = !percentageView;
+        console.log("New State --> ", newState);
+        setpercentageView(newState);
+    };
 
     const stateUpdateFxn = useCallback(
         (index, newObj) => {
@@ -58,8 +70,8 @@ function Main() {
 
     return (
         <div>
-            {console.log("Re-render : State --> ", state)}
-            <TrendPlot state={state} indexUpdated={indexUpdated} />
+            {console.log("Re-render : State --> ", state, percentageView)}
+            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView}/>
             <br></br>
 
             <div className="container">
@@ -68,6 +80,14 @@ function Main() {
                     <Dropdown.Item onClick={() => { addCard("raw") }}>Raw-Data</Dropdown.Item>
                     <Dropdown.Item onClick={() => { addCard("sip") }}>Mutual Funds</Dropdown.Item>
                 </DropdownButton>
+
+                <button
+                    className={`btn ${percentageView ? "btn-success" : "btn-danger"} px-4`}
+                    onClick={handleToggle}
+                    style={{float: 'right', marginRight: '30px'}}
+                >
+                    Percentage-View {percentageView ? "ON" : "OFF"}
+                </button>
 
                 <br></br>
                 <br></br>

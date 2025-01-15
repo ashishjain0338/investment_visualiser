@@ -20,7 +20,6 @@ const FdCard = React.memo((props) => {
 
     return (
         <div >
-            {obj.principal}
             <Card className="mycard" >
                 <Card.Body >
                     <Row>
