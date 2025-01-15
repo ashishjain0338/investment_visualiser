@@ -57,7 +57,7 @@ function TrendPlot(props) {
     useEffect(
         () => {
             console.log('useEffect of Trendplot called with indexUpdated as ' + props.indexUpdated)
-            let out = []
+            let out = [], collectData = [];
             let maxDataSize = 0;
             // if (props.indexUpdated == -1 || percentageView) {
             for (let i = 0; i < props.state.length; i++) {
@@ -66,8 +66,17 @@ function TrendPlot(props) {
                 if (props.percentageView) {
                     curData = convertToPercentage(curData);
                 }
+                collectData.push(curData);
+                
                 maxDataSize = Math.max(maxDataSize, curData.length);
-                out.push(getSinglePlotData(curData, obj.title, selectedColors[i % 12]));
+                
+            }
+            if(props.diffView){
+                collectData = diffView(collectData);
+            }
+
+            for(let i = 0;i < collectData.length; i++){
+                out.push(getSinglePlotData(collectData[i], "Dummy", selectedColors[i % 12]));
             }
             // }
 
@@ -78,7 +87,8 @@ function TrendPlot(props) {
                 }
             );
         },
-        [props.state, props.indexUpdated, props.percentageView]
+        //TODO: Props state, indexUpdated to be moved in its own useEffect
+        [props.state, props.indexUpdated, props.percentageView, props.diffView]
     )
 
     function getQuaterLabels(size) {
@@ -107,6 +117,39 @@ function TrendPlot(props) {
         return cur;
     }
 
+    // From Chatgpt
+    function diffView(cur) {
+        // Check for uneven lengths in the arrays
+        const baseLength = cur[0].length;
+        const isUneven = cur.some(arr => arr.length !== baseLength);
+        if (isUneven) {
+            console.error("Support is not there");
+            return cur; // Return null to indicate an error
+        }
+    
+        // Find the base series (array with the lowest last value)
+        let baseIndex = 0;
+        let lowestValue = cur[0][baseLength - 1];
+    
+        for (let i = 1; i < cur.length; i++) {
+            const lastValue = cur[i][cur[i].length - 1];
+            if (lastValue < lowestValue) {
+                lowestValue = lastValue;
+                baseIndex = i;
+            }
+        }
+    
+        const baseSeries = cur[baseIndex];
+    
+        // Subtract the base series from all series
+        const result = cur.map(series =>
+            series.map((value, index) => value - baseSeries[index])
+        );
+    
+        return result;
+    }
+    
+
     function getSinglePlotData(curData, title, color) {
         let out =
         {
@@ -128,7 +171,7 @@ function TrendPlot(props) {
     return (
         <div>
             {console.log("Rerendering Trend-Plot")}
-            <h4 className='light_text' style={{ textAlign: "center" }}>Line-Plot</h4>
+            {/* <h4 className='light_text' style={{ textAlign: "center" }}>Line-Plot</h4> */}
             <div className='container-fluid light_text' >
                 <Line data={data} options={options} height="300px" />
             </div>

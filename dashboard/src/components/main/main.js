@@ -6,23 +6,29 @@ import { useState, useCallback } from "react"
 import { FD } from "../../logic/fd"
 import { RawData } from "../../logic/rawdata"
 
-let testStateLen1 = [new FD("First", 1000, 7, 1000, 0)]
+let testStateLen2 = [new FD("First", 100000, 6.7, 666, 0), new FD("Every Month", 100000, 6.7, 666, 1), new FD("Quaterly", 100000, 6.7, 666, 4)]
 let testStateLen10 = []
 for (let i = 0; i < 10; i++) {
-    testStateLen10.push(new FD("First_" + i, 1000, 7 + i, 1000, 0));
+    testStateLen10.push(new FD("First_" + i, 100, 7 + 4*i, 1000, 1));
 }
 
 function Main() {
-    const [state, setState] = useState(testStateLen10)
+    const [state, setState] = useState(testStateLen2)
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
 
     const [percentageView, setpercentageView] = useState(false);
+    const [diffView, setdiffView] = useState(false);
 
-    const handleToggle = () => {
+    const handlePercentageToggle = () => {
         const newState = !percentageView;
         console.log("New State --> ", newState);
         setpercentageView(newState);
+    };
+    const handleDiffToggle = () => {
+        const newState = !diffView;
+        console.log("New State --> ", newState);
+        setdiffView(newState);
     };
 
     const stateUpdateFxn = useCallback(
@@ -71,7 +77,7 @@ function Main() {
     return (
         <div>
             {console.log("Re-render : State --> ", state, percentageView)}
-            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView}/>
+            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView}/>
             <br></br>
 
             <div className="container">
@@ -82,8 +88,16 @@ function Main() {
                 </DropdownButton>
 
                 <button
+                    className={`btn ${diffView ? "btn-success" : "btn-danger"} px-4`}
+                    onClick={handleDiffToggle}
+                    style={{float: 'right', marginRight: '30px'}}
+                >
+                    Diff-View {diffView ? "ON" : "OFF"}
+                </button>
+
+                <button
                     className={`btn ${percentageView ? "btn-success" : "btn-danger"} px-4`}
-                    onClick={handleToggle}
+                    onClick={handlePercentageToggle}
                     style={{float: 'right', marginRight: '30px'}}
                 >
                     Percentage-View {percentageView ? "ON" : "OFF"}

@@ -175,11 +175,11 @@ class FD {
         The current implementation may produce slight inaccuracies when cumulative_freq equals 1, with deviations potentially around 0.1%
     */
     calculateFromDays(days) {
-        console.log("CheckDays --> ", days)
+        // console.log("CheckDays --> ", days)
         if (days == 0 || days == undefined){
             return [];
         }
-        console.log("Here -->", daysToQuaters(days));
+        // console.log("Here -->", daysToQuaters(days));
         let rate = this.rate / 100;
         const [quaterCount, daysLeft] = daysToQuaters(days);
         let out = this.calculate(quaterCount);
@@ -207,10 +207,6 @@ class FD {
         out.push(out[out.length - 1] + interestLastDays);
         return out;
     }
-
-
-
-
 }
 
 export { FD }
