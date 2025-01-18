@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react"
-import { Button } from "react-bootstrap"
 import { InputGroup, Form } from "react-bootstrap";
 
-function Play() {
+function DayConverter() {
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
@@ -25,7 +24,7 @@ function Play() {
   )
 
   return (
-    <div style={{ margin : "2% 5% 2% 5%",marginLeft: "5%", marginRight: "5%" }}>
+    <div>
       <InputGroup className="mb-3">
         <Form.Control aria-label="Year"
           defaultValue={year}
@@ -53,4 +52,4 @@ function Play() {
   )
 }
 
-export { Play }
+export { DayConverter }

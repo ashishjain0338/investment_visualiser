@@ -60,7 +60,6 @@ class FD {
     }
 
 
-
     /*
         Period must be in quaters
     */
@@ -175,21 +174,17 @@ class FD {
         The current implementation may produce slight inaccuracies when cumulative_freq equals 1, with deviations potentially around 0.1%
     */
     calculateFromDays(days) {
-        // console.log("CheckDays --> ", days)
         if (days == 0 || days == undefined){
             return [];
         }
-        // console.log("Here -->", daysToQuaters(days));
         let rate = this.rate / 100;
         const [quaterCount, daysLeft] = daysToQuaters(days);
         let out = this.calculate(quaterCount);
-        // console.log(out);
         if(daysLeft == 0){
             return out;
         }
         // For rest-days
         let interestLastDays = 0;
-        console.log("Check Cumulative Frequency --> ", this.cumulative_freq)
         switch (this.cumulative_freq) {
             case 0:
                 interestLastDays = this.principal * rate * daysLeft / 365;

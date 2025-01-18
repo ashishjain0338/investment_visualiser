@@ -1,15 +1,15 @@
 import { TrendPlot } from "../line-plot/line_plot"
-import { RawDataCard } from "../cards/rawData_input"
-import { FdCard } from "../cards/fd_input"
-import { Dropdown, Row, Col, DropdownButton } from "react-bootstrap"
+import { Dropdown, Row, Col, DropdownButton, ButtonGroup } from "react-bootstrap"
 import { useState, useCallback } from "react"
 import { FD } from "../../logic/fd"
 import { RawData } from "../../logic/rawdata"
+import { DayConverter } from "../day-converter/day-converter"
+import { getOptionsForDiffView } from "./main_helper"
 
 let testStateLen2 = [new FD("First", 100000, 6.7, 666, 0), new FD("Every Month", 100000, 6.7, 666, 1), new FD("Quaterly", 100000, 6.7, 666, 4)]
 let testStateLen10 = []
 for (let i = 0; i < 10; i++) {
-    testStateLen10.push(new FD("First_" + i, 100, 7 + 4*i, 1000, 1));
+    testStateLen10.push(new FD("First_" + i, 10000, 7 + i, 1000, 1));
 }
 
 function Main() {
@@ -19,6 +19,7 @@ function Main() {
 
     const [percentageView, setpercentageView] = useState(false);
     const [diffView, setdiffView] = useState(false);
+    const [diffIndex, setDiffIndex] = useState(-1);
 
     const handlePercentageToggle = () => {
         const newState = !percentageView;
@@ -77,34 +78,49 @@ function Main() {
     return (
         <div>
             {console.log("Re-render : State --> ", state, percentageView)}
-            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView}/>
+            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView} diffIndex={diffIndex}/>
             <br></br>
 
             <div className="container">
-                <DropdownButton id="dropdown-basic-button" style={{ float: "right" }} title="Add New">
-                    <Dropdown.Item onClick={() => { addCard("fd") }}>Fixed Deposit</Dropdown.Item>
-                    <Dropdown.Item onClick={() => { addCard("raw") }}>Raw-Data</Dropdown.Item>
-                    <Dropdown.Item onClick={() => { addCard("sip") }}>Mutual Funds</Dropdown.Item>
-                </DropdownButton>
+                <div className="row">
+                    <div className="col-lg-6">
+                        <DayConverter />
+                    </div>
+                    <div className="col-lg-6">
+                        <DropdownButton id="dropdown-basic-button" style={{ float: "right" }} title="Add New">
+                            <Dropdown.Item onClick={() => { addCard("fd") }}>Fixed Deposit</Dropdown.Item>
+                            <Dropdown.Item onClick={() => { addCard("raw") }}>Raw-Data</Dropdown.Item>
+                            <Dropdown.Item onClick={() => { addCard("sip") }}>Mutual Funds</Dropdown.Item>
+                        </DropdownButton>
 
-                <button
-                    className={`btn ${diffView ? "btn-success" : "btn-danger"} px-4`}
-                    onClick={handleDiffToggle}
-                    style={{float: 'right', marginRight: '30px'}}
-                >
-                    Diff-View {diffView ? "ON" : "OFF"}
-                </button>
 
-                <button
-                    className={`btn ${percentageView ? "btn-success" : "btn-danger"} px-4`}
-                    onClick={handlePercentageToggle}
-                    style={{float: 'right', marginRight: '30px'}}
-                >
-                    Percentage-View {percentageView ? "ON" : "OFF"}
-                </button>
+                        <Dropdown as={ButtonGroup} style={{ float: 'right', marginRight: '30px' }}>
+                            <button
+                                className={`btn ${diffView ? "btn-success" : "btn-danger"} px-4`}
+                                onClick={handleDiffToggle}
+                            >
+                                Diff-View {diffView ? "ON" : "OFF"}
+                            </button>
 
-                <br></br>
-                <br></br>
+                            <Dropdown.Toggle split className={`${diffView ? "btn-success" : "btn-danger"}`} variant="success" id="dropdown-split-basic" />
+
+                            <Dropdown.Menu>
+                                {getOptionsForDiffView(state, setDiffIndex)}
+                            </Dropdown.Menu>
+                        </Dropdown>
+
+                        <button
+                            className={`btn ${percentageView ? "btn-success" : "btn-danger"} px-4`}
+                            onClick={handlePercentageToggle}
+                            style={{ float: 'right', marginRight: '30px' }}
+                        >
+                            Percentage-View {percentageView ? "ON" : "OFF"}
+                        </button>
+                    </div>
+                </div>
+
+                {/* <br></br>
+                <br></br> */}
                 <hr></hr>
                 {/* Card-Grid as Follows */}
                 <Row xs={1} md={2} className="g-4">

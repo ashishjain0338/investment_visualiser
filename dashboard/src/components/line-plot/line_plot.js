@@ -2,6 +2,7 @@ import { Line } from "react-chartjs-2";
 // Chart is imported to avoid error "category is not a registered scale"
 import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
+import { diffViewUnevenLength, convertToPercentage2D, getQuaterLabels } from "./helper";
 
 const intialData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -57,28 +58,28 @@ function TrendPlot(props) {
     useEffect(
         () => {
             console.log('useEffect of Trendplot called with indexUpdated as ' + props.indexUpdated)
-            let out = [], collectData = [];
+            let out = [], collectData = [], titles = [];
             let maxDataSize = 0;
-            // if (props.indexUpdated == -1 || percentageView) {
             for (let i = 0; i < props.state.length; i++) {
                 let obj = props.state[i]
                 let curData = obj.calculateFromDays(obj.period);
-                if (props.percentageView) {
-                    curData = convertToPercentage(curData);
-                }
+                // Get all data in 2D-Matrix
                 collectData.push(curData);
-                
+                titles.push(obj.title);
                 maxDataSize = Math.max(maxDataSize, curData.length);
-                
+
             }
-            if(props.diffView){
-                collectData = diffView(collectData);
+            // Modify Data based on View
+            if (props.percentageView) {
+                collectData = convertToPercentage2D(collectData);
+            }
+            if (props.diffView) {
+                collectData = diffViewUnevenLength(collectData, props.diffIndex);
             }
 
-            for(let i = 0;i < collectData.length; i++){
-                out.push(getSinglePlotData(collectData[i], "Dummy", selectedColors[i % 12]));
+            for (let i = 0; i < collectData.length; i++) {
+                out.push(getSinglePlotData(collectData[i], titles[i], selectedColors[i % 12]));
             }
-            // }
 
             setdata(
                 {
@@ -87,68 +88,10 @@ function TrendPlot(props) {
                 }
             );
         },
-        //TODO: Props state, indexUpdated to be moved in its own useEffect
-        [props.state, props.indexUpdated, props.percentageView, props.diffView]
+        [props.state, props.indexUpdated, props.percentageView, props.diffView, props.diffIndex]
     )
 
-    function getQuaterLabels(size) {
-        let yearCount = 0, quaterCount = 0;
-        let out = []
-        for (let i = 0; i < size; i++, quaterCount++) {
-            let cur = 'Q' + quaterCount;
-            if (i % 4 == 0) {
-                cur = 'Y' + yearCount;
-                yearCount++;
-                quaterCount = 0;
-            }
-            out.push(cur);
-        }
-        return out;
-    }
 
-    function convertToPercentage(cur) {
-        if (cur.length == 0) {
-            return cur;
-        }
-        let base = cur[0];
-        for (let i = 0; i < cur.length; i++) {
-            cur[i] = (cur[i] - base)/base * 100;
-        }
-        return cur;
-    }
-
-    // From Chatgpt
-    function diffView(cur) {
-        // Check for uneven lengths in the arrays
-        const baseLength = cur[0].length;
-        const isUneven = cur.some(arr => arr.length !== baseLength);
-        if (isUneven) {
-            console.error("Support is not there");
-            return cur; // Return null to indicate an error
-        }
-    
-        // Find the base series (array with the lowest last value)
-        let baseIndex = 0;
-        let lowestValue = cur[0][baseLength - 1];
-    
-        for (let i = 1; i < cur.length; i++) {
-            const lastValue = cur[i][cur[i].length - 1];
-            if (lastValue < lowestValue) {
-                lowestValue = lastValue;
-                baseIndex = i;
-            }
-        }
-    
-        const baseSeries = cur[baseIndex];
-    
-        // Subtract the base series from all series
-        const result = cur.map(series =>
-            series.map((value, index) => value - baseSeries[index])
-        );
-    
-        return result;
-    }
-    
 
     function getSinglePlotData(curData, title, color) {
         let out =
