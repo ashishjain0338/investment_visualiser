@@ -12,13 +12,14 @@ function App() {
       <div className='mainContent'>
         <NavBar />
         <p>This is Something Check Me</p>
-        <HomePage />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage/>} />
             <Route path="/play" element={<Play/>} />
-            <Route path="/investment_visualiser" element={<TrendPlot/>} />
+            
             <Route path="/plot" element={<TrendPlot/>} />
+            {/* Github-Pages */}
+            <Route path="/investment_visualiser" element={<HomePage/>} />
           </Routes>
         </BrowserRouter>
       </div>
