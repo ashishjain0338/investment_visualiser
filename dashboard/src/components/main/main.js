@@ -11,9 +11,15 @@ let testStateLen10 = []
 for (let i = 0; i < 10; i++) {
     testStateLen10.push(new FD("First_" + i, 10000, 7 + i, 1000, 1));
 }
+let testStateRaw_FD = [
+    new FD("First", 100000, 6.7, 666, 0),
+    new FD("Every Month", 100000, 6.7, 666, 1),
+    new FD("Quaterly", 100000, 6.7, 666, 4),
+    new RawData("Raw", "100000, 101000, 102000, 105000, 102000, 101000")
+]
 
 function Main() {
-    const [state, setState] = useState(testStateLen2)
+    const [state, setState] = useState(testStateRaw_FD)
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
 
@@ -78,7 +84,7 @@ function Main() {
     return (
         <div>
             {console.log("Re-render : State --> ", state, percentageView)}
-            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView} diffIndex={diffIndex}/>
+            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView} diffIndex={diffIndex} />
             <br></br>
 
             <div className="container">

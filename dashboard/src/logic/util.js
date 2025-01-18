@@ -4,38 +4,63 @@ export function greet(name) {
 
 
 export function daysToQuaters(days) {
-    let quaters = Math.floor(days/ (91.25));
-    let remDays = days - 91.25*quaters;
+    let quaters = Math.floor(days / (91.25));
+    let remDays = days - 91.25 * quaters;
     return [quaters, remDays]
 }
 
- /*
-    Format refers to type of period
-    d: days
-    m: months
-    q: quarters
-    y: years
+/*
+   Format refers to type of period
+   d: days
+   m: months
+   q: quarters
+   y: years
 */
-export function convertPeriodToYears(period, format){
-    switch (format){
+export function convertPeriodToYears(period, format) {
+    switch (format) {
         case 'y':
             return period;
         case 'q':
-            return period/4;
+            return period / 4;
         case 'm':
-            return period/12;
+            return period / 12;
         case 'd':
-            return period/365;
+            return period / 365;
         default:
             console.error(`format ${format} not supported by convertPeriodToYears `)
             return -1;
     }
 }
 
-export function updateObjUsingAttrName(obj, attr, attrValue){
-    if(attr in obj){
+export function updateObjUsingAttrName(obj, attr, attrValue) {
+    if (attr in obj) {
         obj[attr] = attrValue;
-    }else{
+    } else {
         console.warn(`Attribute ${attr} doesn't belong to the given Object : ${obj}`)
     }
+}
+
+function getFloat(val) {
+    val = parseFloat(val);
+    if (isNaN(val)) {
+        val = 0;
+    }
+    return val;
+}
+
+export function convertCSVtoList(csv) {
+    let out = [];
+    let cur = "";
+    for (let i = 0; i < csv.length; i++) {
+        if (csv[i] == ',') {
+            if (cur.length != 0) {
+                out.push(getFloat(cur));
+                cur = "";
+            }
+
+        } else cur += csv[i];
+    }
+    if (cur.length != 0)
+        out.push(getFloat(cur));
+    return out;
 }

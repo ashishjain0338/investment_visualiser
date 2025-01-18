@@ -1,25 +1,36 @@
 import { RawDataCard } from "../components/cards/rawData_input";
+import { updateObjUsingAttrName } from "./util";
+import { convertCSVtoList } from "./util";
 
-class RawData{
-    data;
+class RawData {
+    csv;
 
-    constructor(){
-        this.data = [];
+    constructor(title = "Raw-Data", csv = "") {
+        this.csv = csv;
+        this.title = title;
     }
 
-    info(){
-        console.log(`Raw-Data: ${this.data}`)
+    clone() {
+        return new RawData(this.title, this.csv);
     }
 
-    convertCSVtoList(csv){
-        return 1
+    info() {
+        console.log(`Raw-Data: ${this.csv}`)
     }
 
-    getReactComponent(){
-        return <RawDataCard />
+    updateField(attrName, value) {
+        updateObjUsingAttrName(this, attrName, value);
+    }
+
+    calculateFromDays(days) {
+        return convertCSVtoList(this.csv);
+    }
+
+    getReactComponent(index, parentUpdateFxn) {
+        return <RawDataCard obj={this} index={index} parentUpdateFxn={parentUpdateFxn} />
     }
 
 }
 
-export {RawData}
+export { RawData }
 
