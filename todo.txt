@@ -1,15 +1,20 @@
 Pending:
-3. Flask and SaveState
-4. Loading save state
+1b. Documentation if one needs to attach its own class
+2b. LocalStorage/Export Deployed Bug Resolve
+
 6. Mutual-Fund support 
 8. Docs Updatation
 9. cumulative_freq More validation Checks
 10. Clean fd.js 'test-suite', Migrate to new-test file  
-11. Copy-Delete button on Cards
 12. Dark Mode
 
 Done:
 1. Diff View for uneven Lengths
 2. Title not connected right now
-7. Props state, indexUpdated to be moved in its own useEffect (Dropped)
+3. Flask and SaveState (Flask is Dropped, instead Local-Storage is employed)
+4. Loading save state
 5. rawdata
+7. Props state, indexUpdated to be moved in its own useEffect (Dropped)
+11. Copy-Delete button on Cards
+3b. Examples Addition
+
