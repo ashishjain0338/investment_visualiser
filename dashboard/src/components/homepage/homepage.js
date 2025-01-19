@@ -4,10 +4,11 @@ function HomePage(props) {
     // Returning the HTML-DOM
     return (
         <div>
-            <Main 
-            defaultStateIndex={props.defaultStateIndex} 
-            stateDownloadSignal={props.stateDownloadSignal}
-            loadedState={props.loadedState}
+            <Main
+                defaultStateIndex={props.defaultStateIndex}
+                stateDownloadSignal={props.stateDownloadSignal}
+                stateSaveSignal={props.stateSaveSignal}
+                loadedState={props.loadedState}
             />
         </div>
     )

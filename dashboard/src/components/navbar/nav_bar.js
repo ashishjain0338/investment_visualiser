@@ -54,7 +54,7 @@ function NavBar(props) {
                                 style={{ display: "none" }} // Hide the default file input
                             />
 
-                            <Nav.Link href="#contact" style={{ color: "#333" }}>Profile</Nav.Link>
+                            <Button variant="outline-primary" onClick={() => { props.saveSignal() }} className="ms-3">Save</Button>
                             <Button variant="outline-primary" onClick={() => { props.downloadSignal() }} className="ms-3">Export</Button>
                             <Button variant="outline-primary" onClick={() => document.getElementById('jsonFileInput').click()} className="ms-3">Load</Button>
                             <Button variant="outline-primary" onClick={popUpShow} className="ms-3">Examples</Button>

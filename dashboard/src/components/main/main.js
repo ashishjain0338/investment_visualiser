@@ -6,8 +6,7 @@ import { RawData } from "../../logic/rawdata"
 import { DayConverter } from "../day-converter/day-converter"
 import { getOptionsForDiffView } from "./main_helper"
 import { examples } from "../../saved_states/example"
-import { DumpClass, LoadClass } from "../../logic/class_loadDump"
-import { DownloadData } from "../../logic/class_loadDump"
+import { DumpClass, LoadClass, DownloadData, saveToLocalStorage, loadFromLocalStorage } from "../../logic/class_loadDump"
 
 let testStateLen2 = [new FD("First", 100000, 6.7, 666, 0), new FD("Every Month", 100000, 6.7, 666, 1), new FD("Quaterly", 100000, 6.7, 666, 4)]
 let testStateLen10 = []
@@ -56,23 +55,14 @@ function Main(props) {
         [props.defaultStateIndex]
     )
 
+    
+
     useEffect(() => {
         // -1 suggests Page-Refresh, Not a Button Click
-        let downloadedState = [];
-        for (let i = 0; i < state.length; i++) {
-            downloadedState.push(DumpClass(state[i]));
-        }
         if (props.stateDownloadSignal != -1) {
-            let downloadObj = {
-                "title": "Your Title",
-                "state": downloadedState,
-                "percentage-view": percentageView,
-                "diff-view": diffView,
-            }
+            let downloadObj = getStateForStorage()
             DownloadData(downloadObj, "export.json");
         }
-
-
     },
         [props.stateDownloadSignal]
     )
@@ -81,10 +71,15 @@ function Main(props) {
         if(typeof props.loadedState !== "undefined"){
             loadState(props.loadedState);
         }
-
     }, [props.loadedState]
-
     )
+
+    useEffect(() => {
+        if(props.stateSaveSignal != -1){
+            saveToLocalStorage("savedState", getStateForStorage());
+            alert('Saved');
+        }
+    }, [props.stateSaveSignal])
 
     function loadState(newState) {
         let stateList = []
@@ -95,6 +90,21 @@ function Main(props) {
         setdiffView(newState['diff-view'])
         setDiffIndex(-1);
         setState(stateList);
+    }
+
+    function getStateForStorage(){
+        let curState = [];
+        for (let i = 0; i < state.length; i++) {
+            curState.push(DumpClass(state[i]));
+        }
+
+        let obj = {
+            "title": "Your Title",
+            "state": curState,
+            "percentage-view": percentageView,
+            "diff-view": diffView,
+        }
+        return obj;
     }
 
     /*

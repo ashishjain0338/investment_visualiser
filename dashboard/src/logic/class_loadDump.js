@@ -44,4 +44,13 @@ function DownloadData(data, filename) {
   link.click(); // Simulate a click to start the download
 }
 
-export { DumpClass, LoadClass, DownloadData }
+function saveToLocalStorage(key, obj) {
+  localStorage.setItem(key, JSON.stringify(obj));
+}
+
+function loadFromLocalStorage(key) {
+  const storedValue = localStorage.getItem(key);
+  return storedValue ? JSON.parse(storedValue) : null; // Convert back to an object
+}
+
+export { DumpClass, LoadClass, DownloadData, saveToLocalStorage, loadFromLocalStorage}
