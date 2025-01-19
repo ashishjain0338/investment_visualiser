@@ -35,6 +35,9 @@ function convertToPercentage(cur) {
 
 function getBaseIndex(cur){
     // The one series that will have the lowest last value will be treated as base
+    if(cur.length == 0){
+        return 0;
+    }
     let baseIndex = 0, baseLength = cur[0].length;
     let lowestValue = cur[0][baseLength - 1];
 
@@ -51,6 +54,8 @@ function getBaseIndex(cur){
 function diffViewUnevenLength(cur, index = -1) {
     // Check for uneven lengths in the arrays
     // Find the base series (array with the lowest last value)
+    if(cur.length == 0)
+        return cur;
     let baseIndex = index;
     if(index == -1){
         baseIndex = getBaseIndex(cur);

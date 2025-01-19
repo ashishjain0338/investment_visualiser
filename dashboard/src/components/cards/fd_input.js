@@ -1,9 +1,6 @@
-import { Card } from "react-bootstrap";
-import { Row } from "react-bootstrap";
-import { Col } from "react-bootstrap";
-import { InputGroup, Form } from "react-bootstrap";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import { InputGroup, Form, Button, Card, Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Trash, Duplicate } from "../icons/icons";
 import './card.css'
 
 const FdCard = React.memo((props) => {
@@ -27,13 +24,19 @@ const FdCard = React.memo((props) => {
                 <Card.Body >
                     <Row>
                         <Col>
-                            <Card.Title><Form.Control aria-label="Title" 
-                            value={obj.title}
-                            onChange={(e) => { updateEvent("title", e.target.value) }}
+                            <Card.Title><Form.Control aria-label="Title"
+                                value={obj.title}
+                                onChange={(e) => { updateEvent("title", e.target.value) }}
                             /></Card.Title>
                         </Col>
                         <Col>
-                            <Card.Text style={{ float: 'right' }}>FD</Card.Text>
+                            <Button className="btn btn-danger" style={{ float: 'right', margin: "0 1% 0 3%" }}
+                                onClick={() => {props.deleteFxn(props.index)}}
+                            ><Trash /></Button>
+                            <Button className="btn btn-success" style={{ float: 'right', margin: "0 1% 0 3%" }}
+                                onClick={() => {props.duplicateFxn(props.index)}}
+                            ><Duplicate /></Button>
+                            <Card.Text style={{ float: 'right', marginRight: "10%" }}>FD</Card.Text>
                         </Col>
                     </Row>
 
@@ -73,7 +76,7 @@ const FdCard = React.memo((props) => {
 
                         </Form.Select>
                         <InputGroup.Text>Premature</InputGroup.Text>
-                        <Form.Control aria-label="Premature" 
+                        <Form.Control aria-label="Premature"
                             value={obj.premature}
                             onChange={(e) => { updateEvent("premature", e.target.value) }}
                         />

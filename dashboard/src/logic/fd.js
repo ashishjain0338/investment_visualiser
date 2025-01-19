@@ -34,8 +34,14 @@ class FD {
     }
 
 
-    getReactComponent(index, parentUpdateFxn) {
-        return <FdCard obj={this} index={index} parentUpdateFxn={parentUpdateFxn}/>
+    getReactComponent(index, parentUpdateFxn,  deleteFxn, duplicateFxn) {
+        return <FdCard 
+        obj={this} 
+        index={index} 
+        parentUpdateFxn={parentUpdateFxn}
+        deleteFxn={deleteFxn}
+        duplicateFxn={duplicateFxn}
+        />
     }
 
     updateField(attrName, value) {

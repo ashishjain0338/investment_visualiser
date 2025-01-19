@@ -26,8 +26,14 @@ class RawData {
         return convertCSVtoList(this.csv);
     }
 
-    getReactComponent(index, parentUpdateFxn) {
-        return <RawDataCard obj={this} index={index} parentUpdateFxn={parentUpdateFxn} />
+    getReactComponent(index, parentUpdateFxn, deleteFxn, duplicateFxn) {
+        return <RawDataCard
+            obj={this}
+            index={index}
+            parentUpdateFxn={parentUpdateFxn}
+            deleteFxn={deleteFxn}
+            duplicateFxn={duplicateFxn}
+        />
     }
 
 }

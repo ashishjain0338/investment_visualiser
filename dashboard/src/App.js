@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from './components/homepage/homepage';
 import { NavBar } from './components/navbar/nav_bar';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect} from 'react';
 import { loadFromLocalStorage } from './logic/class_loadDump';
 // PlayGround
 // import { HomePageClass } from './components/playground/classhomepage/classHomePage';

@@ -1,14 +1,15 @@
-import { Card, Row, Col, InputGroup, Form } from "react-bootstrap";
+import { Card, Row, Col, InputGroup, Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import React from "react";
+import { Trash, Duplicate } from "../icons/icons";
 import './card.css'
 
 const RawDataCard = React.memo((props) => {
     const [obj, setobj] = useState(props.obj)
 
-    useEffect( () => {
+    useEffect(() => {
         setobj(props.obj);
-    },[props.obj]
+    }, [props.obj]
     )
 
     function updateEvent(attributeName, value) {
@@ -31,6 +32,12 @@ const RawDataCard = React.memo((props) => {
                             /></Card.Title>
                         </Col>
                         <Col>
+                            <Button className="btn btn-danger" style={{ float: 'right', margin: "0 1% 0 3%" }}
+                                onClick={() => { props.deleteFxn(props.index) }}
+                            ><Trash /></Button>
+                            <Button className="btn btn-success" style={{ float: 'right', margin: "0 1% 0 3%" }}
+                                onClick={() => { props.duplicateFxn(props.index) }}
+                            ><Duplicate /></Button>
                             <Card.Text style={{ float: 'right' }}>Raw Data</Card.Text>
                         </Col>
                     </Row>
@@ -38,9 +45,9 @@ const RawDataCard = React.memo((props) => {
                     <hr></hr>
                     <InputGroup className="mb-3">
                         <InputGroup.Text>CSV-Data</InputGroup.Text>
-                        <Form.Control as="textarea" aria-label="csv-data" 
-                        value={obj.csv}
-                        onChange={(e) => { updateEvent("csv", e.target.value) }}
+                        <Form.Control as="textarea" aria-label="csv-data"
+                            value={obj.csv}
+                            onChange={(e) => { updateEvent("csv", e.target.value) }}
                         />
                     </InputGroup>
                 </Card.Body>

@@ -21,7 +21,7 @@ let testStateRaw_FD = [
 ]
 
 function Main(props) {
-    const [state, setState] = useState(testStateRaw_FD)
+    const [state, setState] = useState([])
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
     const [percentageView, setpercentageView] = useState(false);
@@ -46,6 +46,21 @@ function Main(props) {
         }
     )
 
+    const deleteFxn = useCallback(
+        (indexToDelete) => {
+            setState((prevState) => prevState.filter((_, index) => index !== indexToDelete));
+        }
+    )
+
+    const duplicateFxn = useCallback(
+        (indexToDuplicate) => {
+            const newArray = [...state]; // Create a copy of the state array
+            newArray.splice(indexToDuplicate + 1, 0, state[indexToDuplicate]); // Insert duplicate at index + 1
+            setState(newArray);
+
+        }
+    )
+
 
     useEffect(() => {
         if (props.defaultStateIndex != -1) {
@@ -55,7 +70,7 @@ function Main(props) {
         [props.defaultStateIndex]
     )
 
-    
+
 
     useEffect(() => {
         // -1 suggests Page-Refresh, Not a Button Click
@@ -67,43 +82,43 @@ function Main(props) {
         [props.stateDownloadSignal]
     )
 
-    useEffect( () => {
-        if(typeof props.loadedState !== "undefined"){
+    useEffect(() => {
+        if (typeof props.loadedState !== "undefined") {
             loadState(props.loadedState);
         }
     }, [props.loadedState]
     )
 
     useEffect(() => {
-        if(props.stateSaveSignal != -1){
+        if (props.stateSaveSignal != -1) {
             saveToLocalStorage("savedState", getStateForStorage());
             alert('Saved');
         }
     }, [props.stateSaveSignal])
 
     function loadState(newState) {
-        try{
+        try {
             let stateList = []
-        for (let i = 0; i < newState['state'].length; i++) {
-            stateList.push(LoadClass(newState['state'][i]))
-        }
-        setpercentageView(newState['percentage-view']);
-        setdiffView(newState['diff-view'])
-        setDiffIndex(-1);
-        setState(stateList);
-        }catch(err){
+            for (let i = 0; i < newState['state'].length; i++) {
+                stateList.push(LoadClass(newState['state'][i]))
+            }
+            setpercentageView(newState['percentage-view']);
+            setdiffView(newState['diff-view'])
+            setDiffIndex(-1);
+            setState(stateList);
+        } catch (err) {
             alert("Unable To Load-State| Will Load Default");
-            console.log("State-Load Error",err);
+            console.log("State-Load Error", err);
             setpercentageView(false);
             setdiffView(false)
             setDiffIndex(-1);
             setState([]);
 
         }
-        
+
     }
 
-    function getStateForStorage(){
+    function getStateForStorage() {
         let curState = [];
         for (let i = 0; i < state.length; i++) {
             curState.push(DumpClass(state[i]));
@@ -144,14 +159,12 @@ function Main(props) {
         for (let i = 0; i < state.length; i++) {
             out.push(
                 <Col>
-                    {state[i].getReactComponent(i, stateUpdateFxn)}
+                    {state[i].getReactComponent(i, stateUpdateFxn, deleteFxn, duplicateFxn)}
                 </Col>
             );
         }
         return out;
     }
-
-
 
     return (
         <div>
