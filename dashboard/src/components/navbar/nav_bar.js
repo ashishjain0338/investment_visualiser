@@ -1,12 +1,36 @@
 import { Navbar, Nav, Button, Container, Modal, ListGroup } from "react-bootstrap";
 import { useState } from 'react';
-import { getExamplesHTML} from "./navbar_helper";
+import { getExamplesHTML } from "./navbar_helper";
 
 function NavBar(props) {
     const [show, setShow] = useState(false);
 
     const popUpClose = () => setShow(false);
     const popUpShow = () => setShow(true);
+
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+
+        if (file && file.type === "application/json") {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    // Parse the JSON data
+                    const parsedData = JSON.parse(reader.result);
+                    props.setLoadState(parsedData);
+                } catch (error) {
+                    alert("Invalid JSON file");
+                }
+            };
+
+            reader.readAsText(file); // Read the file as text
+        } else {
+            alert("Please upload a valid JSON file");
+        }
+    };
+
+
 
     return (
         <div>
@@ -22,13 +46,22 @@ function NavBar(props) {
 
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
+                            <input
+                                type="file"
+                                accept=".json"
+                                onChange={handleFileChange}
+                                id="jsonFileInput"
+                                style={{ display: "none" }} // Hide the default file input
+                            />
+
                             <Nav.Link href="#contact" style={{ color: "#333" }}>Profile</Nav.Link>
+                            <Button variant="outline-primary" onClick={() => { props.downloadSignal() }} className="ms-3">Export</Button>
+                            <Button variant="outline-primary" onClick={() => document.getElementById('jsonFileInput').click()} className="ms-3">Load</Button>
                             <Button variant="outline-primary" onClick={popUpShow} className="ms-3">Examples</Button>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-
 
             <Modal show={show} onHide={popUpClose} centered >
                 <Modal.Header closeButton>

@@ -7,6 +7,7 @@ import { DayConverter } from "../day-converter/day-converter"
 import { getOptionsForDiffView } from "./main_helper"
 import { examples } from "../../saved_states/example"
 import { DumpClass, LoadClass } from "../../logic/class_loadDump"
+import { DownloadData } from "../../logic/class_loadDump"
 
 let testStateLen2 = [new FD("First", 100000, 6.7, 666, 0), new FD("Every Month", 100000, 6.7, 666, 1), new FD("Quaterly", 100000, 6.7, 666, 4)]
 let testStateLen10 = []
@@ -24,7 +25,6 @@ function Main(props) {
     const [state, setState] = useState(testStateRaw_FD)
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
-
     const [percentageView, setpercentageView] = useState(false);
     const [diffView, setdiffView] = useState(false);
     const [diffIndex, setDiffIndex] = useState(-1);
@@ -50,13 +50,43 @@ function Main(props) {
 
     useEffect(() => {
         if (props.defaultStateIndex != -1) {
-            loadStateFromExamples(examples[props.defaultStateIndex]);
+            loadState(examples[props.defaultStateIndex]);
         }
     },
         [props.defaultStateIndex]
     )
 
-    function loadStateFromExamples(newState) {
+    useEffect(() => {
+        // -1 suggests Page-Refresh, Not a Button Click
+        let downloadedState = [];
+        for (let i = 0; i < state.length; i++) {
+            downloadedState.push(DumpClass(state[i]));
+        }
+        if (props.stateDownloadSignal != -1) {
+            let downloadObj = {
+                "title": "Your Title",
+                "state": downloadedState,
+                "percentage-view": percentageView,
+                "diff-view": diffView,
+            }
+            DownloadData(downloadObj, "export.json");
+        }
+
+
+    },
+        [props.stateDownloadSignal]
+    )
+
+    useEffect( () => {
+        if(typeof props.loadedState !== "undefined"){
+            loadState(props.loadedState);
+        }
+
+    }, [props.loadedState]
+
+    )
+
+    function loadState(newState) {
         let stateList = []
         for (let i = 0; i < newState['state'].length; i++) {
             stateList.push(LoadClass(newState['state'][i]))

@@ -1,56 +1,59 @@
-import { useState, useEffect } from "react"
-import { Button } from "react-bootstrap"
-import { InputGroup, Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Form } from "react-bootstrap";
 
-function Play() {
-  const [year, setYear] = useState("");
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [out, setOut] = useState("");
+const Play = () => {
+  const [jsonData, setJsonData] = useState(null);
 
-  function getInteger(val){
-    val = parseInt(val);
-    if (isNaN(val)) {
-      val = 0;
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file && file.type === "application/json") {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        try {
+          // Parse the JSON data
+          const parsedData = JSON.parse(reader.result);
+          setJsonData(parsedData); // Store the parsed data in state
+        } catch (error) {
+          alert("Invalid JSON file");
+        }
+      };
+
+      reader.readAsText(file); // Read the file as text
+    } else {
+      alert("Please upload a valid JSON file");
     }
-    return val;
-  }
-
-  useEffect(() => {
-    let y = getInteger(year), m = getInteger(month), d = getInteger(day);
-    let converted = 365 * y + (30.5) * m + d;
-    setOut(converted);
-  },
-    [year, month, day]
-  )
+  };
 
   return (
-    <div style={{ margin : "2% 5% 2% 5%",marginLeft: "5%", marginRight: "5%" }}>
-      <InputGroup className="mb-3">
-        <Form.Control aria-label="Year"
-          defaultValue={year}
-          onChange={(e) => { setYear(e.target.value) }}
+    <div>
+      <Form>
+        {/* Hidden file input */}
+        <input
+          type="file"
+          accept=".json"
+          onChange={handleFileChange}
+          id="jsonFileInput"
+          style={{ display: "none" }} // Hide the default file input
         />
-        <InputGroup.Text>Year</InputGroup.Text>
-
-        <Form.Control aria-label="Month"
-          defaultValue={month}
-          onChange={(e) => { setMonth(e.target.value) }}
-        />
-        <InputGroup.Text>Month</InputGroup.Text>
-        <Form.Control aria-label="Days"
-          defaultValue={day}
-          onChange={(e) => { setDay(e.target.value) }}
-        />
-        <InputGroup.Text>Days</InputGroup.Text>
-        <InputGroup.Text>=</InputGroup.Text>
-        <Form.Control aria-label="Days"
-          defaultValue={out}
-          disabled
-        />
-      </InputGroup>
+        {/* Custom button styled as "Load" */}
+        <Button 
+          variant="primary" 
+          onClick={() => document.getElementById('jsonFileInput').click()} 
+        >
+          Load
+        </Button>
+      </Form>
+      
+      {jsonData && (
+        <div>
+          <h3>Parsed JSON Data:</h3>
+          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export { Play }
+export {Play};
