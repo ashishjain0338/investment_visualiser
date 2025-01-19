@@ -82,7 +82,8 @@ function Main(props) {
     }, [props.stateSaveSignal])
 
     function loadState(newState) {
-        let stateList = []
+        try{
+            let stateList = []
         for (let i = 0; i < newState['state'].length; i++) {
             stateList.push(LoadClass(newState['state'][i]))
         }
@@ -90,6 +91,16 @@ function Main(props) {
         setdiffView(newState['diff-view'])
         setDiffIndex(-1);
         setState(stateList);
+        }catch(err){
+            alert("Unable To Load-State| Will Load Default");
+            console.log("State-Load Error",err);
+            setpercentageView(false);
+            setdiffView(false)
+            setDiffIndex(-1);
+            setState([]);
+
+        }
+        
     }
 
     function getStateForStorage(){
