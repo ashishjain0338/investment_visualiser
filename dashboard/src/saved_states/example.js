@@ -49,7 +49,15 @@ export const examples = [
 
     },
     {
-        "title" : "Raw-Data Example",
-        "state" : []
+        "title" : "Various Financial-Trends (Raw-Data Example)",
+        "state": [
+            JSON.stringify({"className":"RawData", "title":"UpTrend", "csv" : "10, 12, 14, 16, 19, 23, 28, 34, 41, 49"}),
+            JSON.stringify({"className":"RawData", "title":"Downtrend", "csv" : "60, 55, 50, 46, 41, 36, 32, 27, 23, 20"}),
+            JSON.stringify({"className":"RawData", "title":"Volatile Market", "csv" : "50, 55, 48, 60, 45, 52, 40, 58, 47, 53"}),
+            JSON.stringify({"className":"RawData", "title":"Mean Reversion", "csv" : "50, 55, 48, 52, 47, 53, 49, 54, 50, 51"}),
+            JSON.stringify({"className":"RawData", "title":"Logarithmic Growth", "csv" : "5, 15, 27, 38, 46, 52, 57, 61, 64, 66"}),
+        ],
+        "percentage-view": false,
+        "diff-view": false
     }
 ]
