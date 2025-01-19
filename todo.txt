@@ -1,7 +1,7 @@
 Pending:
 1b. Documentation if one needs to attach its own class
-2b. LocalStorage/Export Deployed Bug Resolve
-
+4b. Premature-Penality/ Taxes Calculation in FD
+5b. Alert to ask user to save on page-exit
 6. Mutual-Fund support 
 8. Docs Updatation
 9. cumulative_freq More validation Checks
@@ -16,5 +16,6 @@ Done:
 5. rawdata
 7. Props state, indexUpdated to be moved in its own useEffect (Dropped)
 11. Copy-Delete button on Cards
+2b. LocalStorage/Export Deployed Bug Resolve
 3b. Examples Addition
 
