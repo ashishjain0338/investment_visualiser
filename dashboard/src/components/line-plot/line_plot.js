@@ -57,7 +57,6 @@ function TrendPlot(props) {
 
     useEffect(
         () => {
-            console.log('useEffect of Trendplot called with indexUpdated as ' + props.indexUpdated)
             let out = [], collectData = [], titles = [];
             let maxDataSize = 0;
             for (let i = 0; i < props.state.length; i++) {
@@ -113,7 +112,6 @@ function TrendPlot(props) {
 
     return (
         <div>
-            {console.log("Rerendering Trend-Plot")}
             {/* <h4 className='light_text' style={{ textAlign: "center" }}>Line-Plot</h4> */}
             <div className='container-fluid light_text' >
                 <Line data={data} options={options} height="300px" />

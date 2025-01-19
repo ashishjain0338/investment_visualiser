@@ -8,7 +8,6 @@ const RawDataCard = React.memo((props) => {
 
     function updateEvent(attributeName, value) {
         // Clone the object to create a new reference, in order to component to re-render after setObj()
-        // console.log(obj);
         const clone = obj.clone();
         clone.updateField(attributeName, value);
         setobj(clone);

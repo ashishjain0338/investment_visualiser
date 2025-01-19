@@ -56,7 +56,6 @@ function diffViewUnevenLength(cur, index = -1) {
         baseIndex = getBaseIndex(cur);
     }
     
-    console.log("BaseIndex --> ", baseIndex);
     const baseSeries = cur[baseIndex];
     // If baseseries is small, last element of baseSeries will be used for used
     let result = [];

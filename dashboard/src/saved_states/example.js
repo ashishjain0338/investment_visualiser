@@ -7,19 +7,45 @@ export const examples = [
                 JSON.stringify({"className":"FD", "title":"Compounded-Quaterly (Banking-Norm)", "principal":100000, "rate":6.7,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
                 JSON.stringify({"className":"FD", "title":"Compounded-Six-MonthPeriod", "principal":100000, "rate":6.7,"period":1000,"cumulative_freq":6,"data":[],"premature":0}),
                 JSON.stringify({"className":"FD", "title":"Compounded-Annually", "principal":100000, "rate":6.7,"period":1000,"cumulative_freq":12,"data":[],"premature":0}),
-            ]
+            ],
+            "percentage-view": false,
+            "diff-view": true
     },
     {
         "title" : "Fixed-Deposit with Varying Interest-rate by 2% each Iteration",
-        "state" : []
+        "state": [
+            JSON.stringify({"className":"FD", "title":"Interest@5%", "principal":100000, "rate":5,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Interest@7%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Interest@9%", "principal":100000, "rate":9,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Interest@11%", "principal":100000, "rate":11,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Interest@13%", "principal":100000, "rate":13,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+        ],
+        "percentage-view": false,
+        "diff-view": false
     },
     {
         "title" : "Fixed-Deposit with Varying Premature-Penality by 0.5% each Iteration",
-        "state" : []
+        "state": [
+            JSON.stringify({"className":"FD", "title":"Penality@0.5%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":0.5}),
+            JSON.stringify({"className":"FD", "title":"Penality@1%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":1}),
+            JSON.stringify({"className":"FD", "title":"Penality@1.5%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":1.5}),
+            JSON.stringify({"className":"FD", "title":"Penality@2%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":2}),
+            JSON.stringify({"className":"FD", "title":"Penality@2.5%", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":2.5}),
+        ],
+        "percentage-view": false,
+        "diff-view": false
     },
     {
         "title" : "Fixed-Deposit with Varying Time",
-        "state" : []
+        "state": [
+            JSON.stringify({"className":"FD", "title":"Time@180", "principal":100000, "rate":7,"period":180,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Time@365", "principal":100000, "rate":7,"period":365,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Time@500", "principal":100000, "rate":7,"period":500,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Time@750", "principal":100000, "rate":7,"period":750,"cumulative_freq":4,"data":[],"premature":0}),
+            JSON.stringify({"className":"FD", "title":"Time@1000", "principal":100000, "rate":7,"period":1000,"cumulative_freq":4,"data":[],"premature":0}),
+        ],
+        "percentage-view": false,
+        "diff-view": false
 
     },
     {

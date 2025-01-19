@@ -31,12 +31,10 @@ function Main(props) {
 
     const handlePercentageToggle = () => {
         const newState = !percentageView;
-        console.log("New State --> ", newState);
         setpercentageView(newState);
     };
     const handleDiffToggle = () => {
         const newState = !diffView;
-        console.log("New State --> ", newState);
         setdiffView(newState);
     };
 
@@ -63,6 +61,9 @@ function Main(props) {
         for (let i = 0; i < newState['state'].length; i++) {
             stateList.push(LoadClass(newState['state'][i]))
         }
+        setpercentageView(newState['percentage-view']);
+        setdiffView(newState['diff-view'])
+        setDiffIndex(-1);
         setState(stateList);
     }
 
@@ -103,7 +104,6 @@ function Main(props) {
 
     return (
         <div>
-            {console.log("Re-render : State --> ", state, percentageView)}
             <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView} diffIndex={diffIndex} />
             <br></br>
 
@@ -145,8 +145,6 @@ function Main(props) {
                     </div>
                 </div>
 
-                {/* <br></br>
-                <br></br> */}
                 <hr></hr>
                 {/* Card-Grid as Follows */}
                 <Row xs={1} md={2} className="g-4">
