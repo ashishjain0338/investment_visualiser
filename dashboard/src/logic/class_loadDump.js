@@ -10,7 +10,7 @@ const classRegistry = {
 // Dump function
 function DumpClass(instance) {
   return JSON.stringify({
-    className: instance.constructor.name,
+    className: instance.getClassName(),
     ...instance,
   });
 }

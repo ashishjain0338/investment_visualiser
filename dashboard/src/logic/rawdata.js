@@ -18,6 +18,10 @@ class RawData {
         console.log(`Raw-Data: ${this.csv}`)
     }
 
+    getClassName(){
+        return 'RawData';
+    }
+
     updateField(attrName, value) {
         updateObjUsingAttrName(this, attrName, value);
     }

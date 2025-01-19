@@ -28,10 +28,14 @@ class FD {
         return new FD(this.title, this.principal, this.rate, this.period, this.cumulative_freq, this.premature, this.data);
     }
 
+    getClassName(){
+        return 'FD';
+    }
 
     info() {
         console.log(`Principal: ${this.principal}, Rate: ${this.rate} %`)
     }
+
 
 
     getReactComponent(index, parentUpdateFxn,  deleteFxn, duplicateFxn) {
