@@ -33,6 +33,7 @@ class FD {
         console.log(`Principal: ${this.principal}, Rate: ${this.rate} %`)
     }
 
+
     getReactComponent(index, parentUpdateFxn) {
         return <FdCard obj={this} index={index} parentUpdateFxn={parentUpdateFxn}/>
     }

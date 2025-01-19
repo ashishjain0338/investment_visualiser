@@ -1,10 +1,10 @@
 import { Main } from "../main/main"
 
-function HomePage() {
+function HomePage(props) {
     // Returning the HTML-DOM
     return (
         <div>
-            <Main />
+            <Main defaultStateIndex={props.defaultStateIndex}/>
 
         </div>
     )

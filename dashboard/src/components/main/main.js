@@ -1,10 +1,12 @@
 import { TrendPlot } from "../line-plot/line_plot"
 import { Dropdown, Row, Col, DropdownButton, ButtonGroup } from "react-bootstrap"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { FD } from "../../logic/fd"
 import { RawData } from "../../logic/rawdata"
 import { DayConverter } from "../day-converter/day-converter"
 import { getOptionsForDiffView } from "./main_helper"
+import { examples } from "../../saved_states/example"
+import { DumpClass, LoadClass } from "../../logic/class_loadDump"
 
 let testStateLen2 = [new FD("First", 100000, 6.7, 666, 0), new FD("Every Month", 100000, 6.7, 666, 1), new FD("Quaterly", 100000, 6.7, 666, 4)]
 let testStateLen10 = []
@@ -18,7 +20,7 @@ let testStateRaw_FD = [
     new RawData("Raw", "100000, 101000, 102000, 105000, 102000, 101000")
 ]
 
-function Main() {
+function Main(props) {
     const [state, setState] = useState(testStateRaw_FD)
     // This state-variable will signal TrendPlot to only re-calculate this index
     const [indexUpdated, setIndexUpdated] = useState(-1);
@@ -46,6 +48,24 @@ function Main() {
             setState(clone);
         }
     )
+
+
+    useEffect(() => {
+        if (props.defaultStateIndex != -1) {
+            loadStateFromExamples(examples[props.defaultStateIndex]);
+        }
+    },
+        [props.defaultStateIndex]
+    )
+
+    function loadStateFromExamples(newState) {
+        let stateList = []
+        for (let i = 0; i < newState['state'].length; i++) {
+            stateList.push(LoadClass(newState['state'][i]))
+        }
+        setState(stateList);
+    }
+
     /*
     The Function will be called to add new-card, It will add card-obj to state as per input
     */

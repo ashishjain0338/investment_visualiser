@@ -1,13 +1,12 @@
 Pending:
 3. Flask and SaveState
 4. Loading save state
-
 6. Mutual-Fund support 
-
 8. Docs Updatation
 9. cumulative_freq More validation Checks
 10. Clean fd.js 'test-suite', Migrate to new-test file  
 11. Copy-Delete button on Cards
+12. Dark Mode
 
 Done:
 1. Diff View for uneven Lengths
