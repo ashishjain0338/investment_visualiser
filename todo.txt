@@ -2,11 +2,42 @@ Pending:
 1b. Documentation if one needs to attach its own class
 4b. Premature-Penality/ Taxes Calculation in FD
 5b. Alert to ask user to save on page-exit
-6. Mutual-Fund support 
 8. Docs Updatation
 9. cumulative_freq More validation Checks
 10. Clean fd.js 'test-suite', Migrate to new-test file  
 12. Dark Mode
+
+Next-Sprint-c:
+1c. Addition of id in state (Currently state identification is done on index),
+    Reference to any index is not possible, when any item is deleted/duplicated.
+2c. Panel-A: SIP (Monthly Installment, Period, XIRR, Expense-Rate, Tax, Standard-devaition (Best-worst as dotted))
+3c. Panel-B: Variable CAGR (LumpSum, period, CAGR-List (or as reference), Expense-Ratio, Tax, Standard-Deviation)
+4c. Panel-C: Load-Benchmark (Load Data from Benchmark like NIFTY, SENSEX)
+5c. Panel-D: Alpha-Beta (Low Priority) (Reference to Benchmark, alpha, beta, risk-free rate)
+6c. Disabled Button, (Hide), that the graph will not be shown.
+7c. Document Design in a Document
+8c. Think How to incorporte other metrics like Rolling-Returns & so-on
+
+Additional Mathematical Terms to Learn for SIP are:
+1. CAGR
+2. Rolling Returns
+3. Training Returns
+4. Absolute Returns
+5. Annualized Returns
+6. Standard Devaition
+7. Beta
+8. Sharpe Ratio
+9. Sortino Rate:
+10. Expension Ratio
+11. Alpha
+12. LTCG/STCG
+
+Helpful-Links:
+https://www.miraeassetmf.co.in/knowledge-center/what-is-alpha-and-beta-in-mutual-funds 
+https://www.tickertape.in/mutualfunds/hdfc-balanced-advantage-fund-M_HDCBA#taximplication 
+https://zerodha.com/varsity/chapter/rolling-returns/
+https://zerodha.com/varsity/modules/
+
 
 Done:
 1. Diff View for uneven Lengths
