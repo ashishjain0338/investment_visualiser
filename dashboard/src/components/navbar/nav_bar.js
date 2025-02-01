@@ -40,8 +40,8 @@ function NavBar(props) {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Nav className="ms-auto">
                         <Nav.Link href="/investment_visualiser" style={{ color: "#333" }}>Home</Nav.Link>
+                        <Nav.Link href="/investment_visualiser/tax" style={{ color: "#333" }}>Tax</Nav.Link>
                         <Nav.Link href="/investment_visualiser/play" style={{ color: "#333" }}>Play</Nav.Link>
-                        <Nav.Link href="#contact" style={{ color: "#333" }}>Contact</Nav.Link>
                     </Nav>
 
                     <Navbar.Collapse id="basic-navbar-nav">

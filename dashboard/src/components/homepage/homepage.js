@@ -9,6 +9,7 @@ function HomePage(props) {
                 stateDownloadSignal={props.stateDownloadSignal}
                 stateSaveSignal={props.stateSaveSignal}
                 loadedState={props.loadedState}
+                enabledCards={props.enabledCards}
             />
         </div>
     )

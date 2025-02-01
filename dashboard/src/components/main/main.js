@@ -20,9 +20,14 @@ let testStateRaw_FD = [
     new RawData("Raw", "100000, 101000, 102000, 105000, 102000, 101000")
 ]
 
+// EnabledCards & theirCardClassName MUST BE SAME
+var enabledCards = ["FD", "RawData", "sip", "tax"];
+// var enabledCards = ["RawData"];
+
 function Main(props) {
     const [state, setState] = useState([])
     // This state-variable will signal TrendPlot to only re-calculate this index
+
     const [indexUpdated, setIndexUpdated] = useState(-1);
     const [percentageView, setpercentageView] = useState(false);
     const [diffView, setdiffView] = useState(false);
@@ -96,11 +101,32 @@ function Main(props) {
         }
     }, [props.stateSaveSignal])
 
+
+    function getAddNewDropDownOptions(enabledCards) {
+        let prettyCardTypes = {
+            "FD": "Fixed Deposit",
+            "RawData" : "Raw-Data",
+            "sip": "Mutual Funds",
+            "Tax": "Tax"
+        }
+        var out = []
+        for (let i = 0; i < enabledCards.length; i++) {
+            out.push(
+                <Dropdown.Item onClick={() => { addCard(enabledCards[i]) }}>{prettyCardTypes[enabledCards[i]]}</Dropdown.Item>
+            )
+        }
+        return out;
+    }
+
     function loadState(newState) {
         try {
             let stateList = []
             for (let i = 0; i < newState['state'].length; i++) {
-                stateList.push(LoadClass(newState['state'][i]))
+                let loadedInstance = LoadClass(newState['state'][i]);
+                let className = loadedInstance.getClassName();
+                if (props.enabledCards.includes(className)){
+                    stateList.push(loadedInstance);
+                }                
             }
             setpercentageView(newState['percentage-view']);
             setdiffView(newState['diff-view'])
@@ -139,12 +165,12 @@ function Main(props) {
     function addCard(identifier) {
         let obj = undefined;
         switch (identifier) {
-            case 'fd':
+            case 'FD':
                 obj = new FD();
                 console.debug('New FD-Object Created', obj);
                 setState(state => [...state, obj]);
                 break;
-            case 'raw':
+            case 'RawData':
                 obj = new RawData();
                 console.debug('New Raw-Object Created', obj);
                 setState(state => [...state, obj]);
@@ -178,9 +204,7 @@ function Main(props) {
                     </div>
                     <div className="col-lg-6">
                         <DropdownButton id="dropdown-basic-button" style={{ float: "right" }} title="Add New">
-                            <Dropdown.Item onClick={() => { addCard("fd") }}>Fixed Deposit</Dropdown.Item>
-                            <Dropdown.Item onClick={() => { addCard("raw") }}>Raw-Data</Dropdown.Item>
-                            <Dropdown.Item onClick={() => { addCard("sip") }}>Mutual Funds</Dropdown.Item>
+                            {getAddNewDropDownOptions(props.enabledCards)}
                         </DropdownButton>
 
 

@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from './components/homepage/homepage';
 import { NavBar } from './components/navbar/nav_bar';
-import { useState, useCallback, useEffect} from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { loadFromLocalStorage } from './logic/class_loadDump';
 // PlayGround
 // import { HomePageClass } from './components/playground/classhomepage/classHomePage';
@@ -42,14 +42,14 @@ function App() {
   // At First-render, Load-State from Session-Storage
   useEffect(() => {
     let savedState = loadFromLocalStorage("savedState");
-    if(typeof savedState !== "undefined"){
+    if (typeof savedState !== "undefined") {
       setLoadState(savedState);
     }
 
   }, [])
 
 
-
+  // enabledCards ITEMS-NAMES MUST BE EQUAL TO THE CLASSNAME THAT ARE ENABLED
   return (
     <div className='mainContent'>
       <NavBar
@@ -60,22 +60,30 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={
-            <HomePage
-              defaultStateIndex={defaultStateIndex}
-              stateDownloadSignal={stateDownloadSignal}
-              stateSaveSignal={stateSaveSignal}
-              loadedState={loadState}
-            />} />
           <Route path="/investment_visualiser/play" element={<Play />} />
           <Route path="/plot" element={<TrendPlot />} />
-          {/* Github-Pages */}
           <Route path="/investment_visualiser" element={
             <HomePage
               defaultStateIndex={defaultStateIndex}
               stateDownloadSignal={stateDownloadSignal}
               stateSaveSignal={stateSaveSignal}
-              loadedState={loadState} />} />
+              loadedState={loadState}
+              enabledCards={["FD", "RawData", "SIP"]}
+            />
+          }
+          />
+
+
+          <Route path="/investment_visualiser/tax" element={
+            <HomePage
+              defaultStateIndex={defaultStateIndex}
+              stateDownloadSignal={stateDownloadSignal}
+              stateSaveSignal={stateSaveSignal}
+              loadedState={loadState}
+              enabledCards={["Tax"]}
+            />
+          }
+          />
         </Routes>
       </BrowserRouter>
     </div>
