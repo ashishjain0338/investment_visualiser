@@ -22,10 +22,10 @@ let testStateRaw_FD = [
 ]
 
 let testTaxState = [
-    new Tax("First", [], ""),
+    new Tax("First", [{limit: 400, rate : 70}, {limit: 30, rate: 45}], ""),
 ]
 
-let MASTER_TESTING = true;
+let MASTER_TESTING = false;
 let MASTER_STATE = testTaxState;
 
 // EnabledCards & theirCardClassName MUST BE SAME
@@ -184,6 +184,11 @@ function Main(props) {
             case 'RawData':
                 obj = new RawData();
                 console.debug('New Raw-Object Created', obj);
+                setState(state => [...state, obj]);
+                break;
+            case 'Tax':
+                obj = new Tax();
+                console.debug('New Tax-Object Created', obj);
                 setState(state => [...state, obj]);
                 break;
             default:

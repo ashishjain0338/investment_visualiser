@@ -1,27 +1,30 @@
 import { RawDataCard } from "../components/cards/rawData_input";
 import { updateObjUsingAttrName } from "./util";
-import { convertCSVtoList } from "./util";
+import { TaxDataCard } from "../components/cards/tax_input";
 
 class Tax {
     taxSlabs;
 
-    constructor(title = "Tax", taxSlabs = [], taxableIncome = "", cessEnabled = false) {
-        taxSlabs = [
-            { limit: 250000, rate: 0 },      // 0% for income up to ₹2,50,000
-            { limit: 1000000, rate: 0.2 },   // 20% for ₹5,00,001 - ₹10,00,000
-            { limit: 500000, rate: 0.05 },   // 5% for ₹2,50,001 - ₹5,00,000
-            { limit: Infinity, rate: 0.3 }   // 30% for income above ₹10,00,000
-        ];
-
-        taxSlabs.sort((a, b) => a.limit - b.limit);
-        this.taxSlabs = taxSlabs;
+    constructor(title = "Tax", taxSlabsRaw = [], taxableIncome = "", cessEnabled = false) {
+        // taxSlabs = [
+        //     { limit: 250000, rate: 0 },      // 0% for income up to ₹2,50,000
+        //     { limit: 1000000, rate: 0.2 },   // 20% for ₹5,00,001 - ₹10,00,000
+        //     { limit: 500000, rate: 0.05 },   // 5% for ₹2,50,001 - ₹5,00,000
+        //     { limit: Infinity, rate: 0.3 }   // 30% for income above ₹10,00,000
+        // ];
+        if(taxSlabsRaw.length == 0 || taxSlabsRaw[taxSlabsRaw.length - 1].limit != Infinity){
+            taxSlabsRaw.push({limit: Infinity, rate: 30});
+        }
+        this.taxSlabsRaw = taxSlabsRaw;
+        this.taxSlabs = [...taxSlabsRaw];
+        this.taxSlabs.sort((a, b) => a.limit - b.limit);
         this.title = title;
         this.taxableIncome = taxableIncome
         this.cessEnabled = cessEnabled;
     }
 
     clone() {
-        return new Tax(this.title, this.taxSlabs, this.taxableIncome, this.cessEnabled);
+        return new Tax(this.title, this.taxSlabsRaw, this.taxableIncome, this.cessEnabled);
     }
 
     info() {
@@ -34,6 +37,23 @@ class Tax {
 
     updateField(attrName, value) {
         // Needs to updated
+        switch (attrName){
+            case 'principal':
+            case 'rate':
+            case 'period':
+            case 'premature':
+                value = parseFloat(value);
+                if (isNaN(value)){
+                    value = 0;
+                }
+            case 'cumulative_freq':
+                value = parseInt(value);
+                if (isNaN(value)){
+                    value = 0;
+                }
+            default:
+                // Do nothing
+        }
         updateObjUsingAttrName(this, attrName, value);
     }
 
@@ -112,8 +132,10 @@ class Tax {
     }
 
     getDataForPlot(period) {
+        // return [[1,2,3], [1,2,3]];
         let startIncome = 0, endIncome = 5000000, step = 10000;
         step = this.getOptimalStepSize();
+        console.log("Steps State Size : ", step);
         // endIncome = 50000;
         let [x, y] = this.taxFunctionArrayOptimal(startIncome, endIncome, step);
         return [x, y];
@@ -122,7 +144,7 @@ class Tax {
 
 
     getReactComponent(index, parentUpdateFxn, deleteFxn, duplicateFxn) {
-        return <RawDataCard
+        return <TaxDataCard
             obj={this}
             index={index}
             parentUpdateFxn={parentUpdateFxn}
