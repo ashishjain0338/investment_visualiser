@@ -3,6 +3,7 @@ import { Dropdown, Row, Col, DropdownButton, ButtonGroup } from "react-bootstrap
 import { useState, useCallback, useEffect } from "react"
 import { FD } from "../../logic/fd"
 import { RawData } from "../../logic/rawdata"
+import { Tax } from "../../logic/tax"
 import { DayConverter } from "../day-converter/day-converter"
 import { getOptionsForDiffView } from "./main_helper"
 import { examples } from "../../saved_states/example"
@@ -20,12 +21,19 @@ let testStateRaw_FD = [
     new RawData("Raw", "100000, 101000, 102000, 105000, 102000, 101000")
 ]
 
+let testTaxState = [
+    new Tax("First", [], ""),
+]
+
+let MASTER_TESTING = true;
+let MASTER_STATE = testTaxState;
+
 // EnabledCards & theirCardClassName MUST BE SAME
 var enabledCards = ["FD", "RawData", "sip", "tax"];
 // var enabledCards = ["RawData"];
 
 function Main(props) {
-    const [state, setState] = useState([])
+    const [state, setState] = useState(testTaxState)
     // This state-variable will signal TrendPlot to only re-calculate this index
 
     const [indexUpdated, setIndexUpdated] = useState(-1);
@@ -131,6 +139,9 @@ function Main(props) {
             setpercentageView(newState['percentage-view']);
             setdiffView(newState['diff-view'])
             setDiffIndex(-1);
+            if(MASTER_TESTING){
+                stateList = MASTER_STATE;
+            }
             setState(stateList);
         } catch (err) {
             alert("Unable To Load-State| Will Load Default");

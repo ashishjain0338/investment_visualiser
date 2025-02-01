@@ -1,10 +1,12 @@
 import { FD } from "./fd";
 import { RawData } from "./rawdata";
+import { Tax } from "./tax";
 
 // Registry to map class names to classes
 const classRegistry = {
   FD,
   RawData,
+  Tax,
 };
 
 // Dump function

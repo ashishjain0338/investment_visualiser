@@ -1,5 +1,6 @@
 import { daysToQuaters, convertPeriodToYears, updateObjUsingAttrName } from "./util.js";
 import { FdCard } from "../components/cards/fd_input.js";
+import { getYearQuaterinArray } from "./util.js";
 
 class FD {
     #private_attr
@@ -34,6 +35,12 @@ class FD {
 
     info() {
         console.log(`Principal: ${this.principal}, Rate: ${this.rate} %`)
+    }
+
+    getDataForPlot(days){
+        let y = this.calculateFromDays(days);
+        let x = getYearQuaterinArray(y.length);
+        return [x, y];
     }
 
 

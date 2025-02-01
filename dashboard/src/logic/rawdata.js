@@ -1,6 +1,6 @@
 import { RawDataCard } from "../components/cards/rawData_input";
-import { updateObjUsingAttrName } from "./util";
-import { convertCSVtoList } from "./util";
+import { convertCSVtoList, updateObjUsingAttrName, getYearQuaterinArray } from "./util";
+
 
 class RawData {
     csv;
@@ -26,7 +26,13 @@ class RawData {
         updateObjUsingAttrName(this, attrName, value);
     }
 
-    calculateFromDays(days) {
+    getDataForPlot(days){
+        let y = this.getData();
+        let x = getYearQuaterinArray(y.length);
+        return [x, y];
+    }
+
+    getData() {
         return convertCSVtoList(this.csv);
     }
 

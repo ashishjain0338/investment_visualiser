@@ -64,3 +64,16 @@ export function convertCSVtoList(csv) {
         out.push(getFloat(cur));
     return out;
 }
+
+/* 
+If requiredSize = 8
+out = [0, 0.25, 0.5, 1, 1.25, 1.5, 1.75, 2]
+The function is used to get xLabels
+*/
+export function getYearQuaterinArray(requiredSize){
+    let out = [];
+    for(let i = 0, q = 0;i < requiredSize; i++, q += 0.25){
+        out.push(q);
+    }
+    return out;
+}

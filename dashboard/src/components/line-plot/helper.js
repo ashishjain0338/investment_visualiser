@@ -27,6 +27,9 @@ function convertToPercentage(cur) {
         return cur;
     }
     let base = cur[0];
+    if(base == 0){
+        base = 1;
+    }
     for (let i = 0; i < cur.length; i++) {
         cur[i] = (cur[i] - base)/base * 100;
     }

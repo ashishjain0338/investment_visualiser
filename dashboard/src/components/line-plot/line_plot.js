@@ -26,7 +26,17 @@ const options = {
     legend: {
         position: "none"
     },
-
+    scales: {
+        x: {
+            type: "linear",
+        },
+        y: {
+            title: {
+                display: true,
+                text: 'Amount (Rs)'
+            },
+        }
+    }
 }
 const colorCombinations = [
     // Combination 1 (Vibrant Pastel Theme)
@@ -57,32 +67,43 @@ function TrendPlot(props) {
 
     useEffect(
         () => {
-            let out = [], collectData = [], titles = [];
+            let out = [], titles = [];
             let maxDataSize = 0;
+            let xList = [], yList = [];
             for (let i = 0; i < props.state.length; i++) {
                 let obj = props.state[i]
-                let curData = obj.calculateFromDays(obj.period);
+                
+                let [x, y] = obj.getDataForPlot(obj.period);
+                xList.push(x);
+                yList.push(y);
                 // Get all data in 2D-Matrix
-                collectData.push(curData);
                 titles.push(obj.title);
-                maxDataSize = Math.max(maxDataSize, curData.length);
+                maxDataSize = Math.max(maxDataSize, y.length);
 
             }
             // Modify Data based on View
             if (props.percentageView) {
-                collectData = convertToPercentage2D(collectData);
+                yList = convertToPercentage2D(yList);
             }
             if (props.diffView) {
-                collectData = diffViewUnevenLength(collectData, props.diffIndex);
+                yList = diffViewUnevenLength(yList, props.diffIndex);
             }
 
-            for (let i = 0; i < collectData.length; i++) {
-                out.push(getSinglePlotData(collectData[i], titles[i], selectedColors[i % 12]));
+            for (let i = 0; i < yList.length; i++) {
+                // Combine x, y : Convert CollectData[i] --> x,y
+                let inter = [];
+                for(let j = 0; j < yList[i].length; j++){
+                    inter.push({
+                        x: xList[i][j],
+                        y: yList[i][j]
+                    })
+                }
+                out.push(getSinglePlotData(inter, titles[i], selectedColors[i % 12]));
             }
 
             setdata(
                 {
-                    labels: getQuaterLabels(maxDataSize),
+                    // labels: y,
                     datasets: out
                 }
             );
