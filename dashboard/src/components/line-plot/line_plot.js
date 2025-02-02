@@ -49,48 +49,49 @@ let selectedColors = [
     "#87CEFA", "#FF69B4", "#32CD32", "#FFA500", "#9370DB", "#FFFACD"
 ];
 
-const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-        position: "none"
-    },
-    scales: {
-        x: {
-            type: "linear",
-        },
-        y: {
-            title: {
-                display: true,
-                text: 'Amount (Rs)'
-            },
-        }
-    },
-    plugins: {
-        annotation: {
-            annotations: {
+// const options = {
+//     responsive: true,
+//     maintainAspectRatio: false,
+//     legend: {
+//         position: "none"
+//     },
+//     scales: {
+//         x: {
+//             type: "linear",
+//         },
+//         y: {
+//             title: {
+//                 display: true,
+//                 text: 'Amount (Rs)'
+//             },
+//         }
+//     },
+//     plugins: {
+//         annotation: {
+//             annotations: {
 
-                point1: {
-                    type: 'point',
-                    xValue: 12,
-                    yValue: 5,
-                    backgroundColor: 'rgba(255, 99, 132, 0.25)',
-                    shadowBlur : 15,
-                },
-                point2: {
-                    type: 'point',
-                    xValue: 15,
-                    yValue: 2.65,
-                    backgroundColor: selectedColors[0],
-                    borderWidth: 1.5,
-                },
-            }
-        }
-    }
-}
+//                 "point1": {
+//                     type: 'point',
+//                     xValue: 12,
+//                     yValue: 5,
+//                     backgroundColor: 'rgba(255, 99, 132, 0.25)',
+//                     shadowBlur: 15,
+//                 },
+//                 "point2": {
+//                     type: 'point',
+//                     xValue: 15,
+//                     yValue: 2.65,
+//                     backgroundColor: selectedColors[0],
+//                     borderWidth: 1.5,
+//                 },
+//             }
+//         }
+//     }
+// }
 
 function TrendPlot(props) {
     const [data, setdata] = useState(intialData);
+    const [plotOptions, setPlotOptions] = useState(props.plotSettings["options"]);
 
     useEffect(
         () => {
@@ -127,19 +128,71 @@ function TrendPlot(props) {
                 out.push(getSinglePlotData(inter, titles[i], selectedColors[i % 12]));
             }
 
-            setdata(
-                {
-                    // labels: y,
-                    datasets: out
-                }
+            if (props.plotSettings["highlightPoints"]) {
+                let points = getXYtoHighlight(xyList);
+                let plotOptions = getOptionsForPointHighlighing(points);
+                setPlotOptions(plotOptions);
+            }
+
+            setdata({ datasets: out }
             );
 
-            // 
         },
         [props.state, props.indexUpdated, props.percentageView, props.diffView, props.diffIndex]
     )
 
 
+    function getXYtoHighlight(xyList) {
+        let points = [];
+        for (let i = 0; i < props.state.length; i++) {
+            let obj = props.state[i]
+            let xToHightlight = obj.getHighlightPoints(obj.period);
+            xToHightlight.sort();
+            // Find Corresponding y for each x to highlight from xylist
+            let curX = xyList[i][0];
+            let inter = [], interIndex = 0;
+            for (let j = 0; j < curX.length && interIndex < xToHightlight.length; j++) {
+                if (curX[j] == xToHightlight[interIndex]) {
+                    inter.push({
+                        x: xToHightlight[interIndex],
+                        y: xyList[i][1][j]
+                    })
+                    interIndex++;
+                }
+            }
+
+            points.push(inter);
+        }
+        return points;
+    }
+
+    function getOptionsForPointHighlighing(points) {
+        let pointSpec = {}
+        let id = 0
+        for (let i = 0; i < points.length; i++) {
+            let color = selectedColors[i % 12]
+            for (let j = 0; j < points[i].length; j++) {
+                let x = points[i][j].x, y = points[i][j].y;
+                pointSpec[`pointId_${id}`] = {
+                    type: 'point',
+                    xValue: x,
+                    yValue: y,
+                    backgroundColor: color,
+                    borderWidth: 1.5,
+                }
+                id++;
+            }
+        }
+
+        return {
+            ...plotOptions,
+            plugins: {
+                annotation: {
+                    annotations: pointSpec
+                }
+            }
+        }
+    }
 
     function getSinglePlotData(curData, title, color) {
         let out =
@@ -163,7 +216,7 @@ function TrendPlot(props) {
         <div>
             {/* <h4 className='light_text' style={{ textAlign: "center" }}>Line-Plot</h4> */}
             <div className='container-fluid light_text' >
-                <Line data={data} options={options} height="300px" />
+                <Line data={data} options={plotOptions} height="300px" />
             </div>
 
         </div>

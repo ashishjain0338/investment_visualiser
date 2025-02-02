@@ -5,11 +5,7 @@ function HomePage(props) {
     return (
         <div>
             <Main
-                defaultStateIndex={props.defaultStateIndex}
-                stateDownloadSignal={props.stateDownloadSignal}
-                stateSaveSignal={props.stateSaveSignal}
-                loadedState={props.loadedState}
-                enabledCards={props.enabledCards}
+                {...props}
             />
         </div>
     )

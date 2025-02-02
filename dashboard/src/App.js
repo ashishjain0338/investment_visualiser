@@ -48,6 +48,32 @@ function App() {
 
   }, [])
 
+  const defaultplotSettings = {
+    "options" : {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+        position: "none"
+      },
+      scales: {
+        x: {
+          type: "linear",
+          title: {
+            display: true,
+            text: "Time (Years)"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Amount (Rs)'
+          },
+        }
+      },
+    },
+    "highlightPoints" : false,
+
+  }
 
   // enabledCards ITEMS-NAMES MUST BE EQUAL TO THE CLASSNAME THAT ARE ENABLED
   return (
@@ -57,6 +83,7 @@ function App() {
         downloadSignal={downloadSignal}
         saveSignal={saveSignal}
         setLoadState={setLoadStateCallBack}
+        
       />
       <BrowserRouter>
         <Routes>
@@ -69,10 +96,11 @@ function App() {
               stateSaveSignal={stateSaveSignal}
               loadedState={loadState}
               enabledCards={["FD", "RawData", "SIP"]}
+              plotSettings={defaultplotSettings}
             />
           }
           />
-
+;
 
           <Route path="/investment_visualiser/tax" element={
             <HomePage
@@ -81,6 +109,8 @@ function App() {
               stateSaveSignal={stateSaveSignal}
               loadedState={loadState}
               enabledCards={["Tax"]}
+              plotSettings={{ ...defaultplotSettings, highlightPoints: true }}
+
             />
           }
           />

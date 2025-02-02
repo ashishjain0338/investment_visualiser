@@ -90,6 +90,10 @@ class Tax {
         }
     }
 
+    getHighlightPoints(){
+        return convertCSVtoList(this.grossIncome);
+    }
+
     taxFunction(taxableIncome) {
         let tax = 0;
         let previousLimit = 0;
@@ -182,7 +186,6 @@ class Tax {
     }
 
     mergePreComputedAndUserVals() {
-        console.log("Merge Pre Computing : ", this.userVals);
         if (this.userVals == undefined) {
             return this.preComputed;
         }
@@ -191,7 +194,6 @@ class Tax {
         let outX = [...preX], outY = [...preY];
         // x-axis must be sorted
         userX.map((val, index) => {
-            console.log("Check-me : ", index, val);
             let indexAfterAdd = sortedInsertIndex(outX, val);
             outX.splice(indexAfterAdd + 1, 0, val);
             outY.splice(indexAfterAdd + 1, 0,userY[index]);
@@ -202,11 +204,7 @@ class Tax {
     }
 
     getDataForPlot(period) {
-        // let userVals = this.userVals;
-        // this.mergePreComputedAndUserVals();
         return this.mergePreComputedAndUserVals();
-        return this.preComputed;
-        // return userVals;
     }
 
     getReactComponent(index, parentUpdateFxn, deleteFxn, duplicateFxn) {

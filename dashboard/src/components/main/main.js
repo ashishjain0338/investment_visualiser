@@ -22,7 +22,7 @@ let testStateRaw_FD = [
 ]
 
 let testTaxState = [
-    new Tax("First", [{limit: 400, rate : 70}, {limit: 30, rate: 45}], ""),
+    new Tax("First", [{ limit: 400, rate: 70 }, { limit: 30, rate: 45 }], ""),
 ]
 
 let MASTER_TESTING = false;
@@ -113,7 +113,7 @@ function Main(props) {
     function getAddNewDropDownOptions(enabledCards) {
         let prettyCardTypes = {
             "FD": "Fixed Deposit",
-            "RawData" : "Raw-Data",
+            "RawData": "Raw-Data",
             "sip": "Mutual Funds",
             "Tax": "Tax"
         }
@@ -132,14 +132,14 @@ function Main(props) {
             for (let i = 0; i < newState['state'].length; i++) {
                 let loadedInstance = LoadClass(newState['state'][i]);
                 let className = loadedInstance.getClassName();
-                if (props.enabledCards.includes(className)){
+                if (props.enabledCards.includes(className)) {
                     stateList.push(loadedInstance);
-                }                
+                }
             }
             setpercentageView(newState['percentage-view']);
             setdiffView(newState['diff-view'])
             setDiffIndex(-1);
-            if(MASTER_TESTING){
+            if (MASTER_TESTING) {
                 stateList = MASTER_STATE;
             }
             setState(stateList);
@@ -210,7 +210,14 @@ function Main(props) {
 
     return (
         <div>
-            <TrendPlot state={state} indexUpdated={indexUpdated} percentageView={percentageView} diffView={diffView} diffIndex={diffIndex} />
+            <TrendPlot
+                state={state}
+                indexUpdated={indexUpdated}
+                percentageView={percentageView}
+                diffView={diffView}
+                diffIndex={diffIndex}
+                plotSettings={props.plotSettings}
+            />
             <br></br>
 
             <div className="container">
