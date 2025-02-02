@@ -2,7 +2,7 @@ import { Line } from "react-chartjs-2";
 // Chart is imported to avoid error "category is not a registered scale"
 import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
-import { diffViewUnevenLength, convertToPercentage2D, getQuaterLabels } from "./helper";
+import { diffViewUnevenLength, convertToPercentage2D, getQuaterLabels, diffViewUnevenLengthWithXY } from "./helper";
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 Chart.register(annotationPlugin);
@@ -96,33 +96,32 @@ function TrendPlot(props) {
         () => {
             let out = [], titles = [];
             let maxDataSize = 0;
-            let xList = [], yList = [];
+            let xyList = [];
             for (let i = 0; i < props.state.length; i++) {
                 let obj = props.state[i]
-
                 let [x, y] = obj.getDataForPlot(obj.period);
-                xList.push(x);
-                yList.push(y);
                 // Get all data in 2D-Matrix
+                xyList.push([x, y]);
                 titles.push(obj.title);
                 maxDataSize = Math.max(maxDataSize, y.length);
 
             }
             // Modify Data based on View
             if (props.percentageView) {
-                yList = convertToPercentage2D(yList);
+                xyList = convertToPercentage2D(xyList);
             }
             if (props.diffView) {
-                yList = diffViewUnevenLength(yList, props.diffIndex);
+                xyList = diffViewUnevenLengthWithXY(xyList, props.diffIndex);
             }
 
-            for (let i = 0; i < yList.length; i++) {
+            for (let i = 0; i < xyList.length; i++) {
                 // Combine x, y : Convert CollectData[i] --> x,y
                 let inter = [];
-                for (let j = 0; j < yList[i].length; j++) {
+                let x = xyList[i][0], y = xyList[i][1];
+                for (let j = 0; j < x.length; j++) {
                     inter.push({
-                        x: xList[i][j],
-                        y: yList[i][j]
+                        x: x[j],
+                        y: y[j]
                     })
                 }
                 out.push(getSinglePlotData(inter, titles[i], selectedColors[i % 12]));

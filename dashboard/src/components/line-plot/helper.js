@@ -15,11 +15,11 @@ function getQuaterLabels(size) {
 
 
 
-function convertToPercentage2D(arr){
-    for(let i = 0;i < arr.length; i++){
-        arr[i] = convertToPercentage(arr[i]);
+function convertToPercentage2D(xyList){
+    for(let i = 0;i < xyList.length; i++){
+        xyList[i][1] = convertToPercentage(xyList[i][1]);
     }
-    return arr;
+    return xyList;
 }
 
 function convertToPercentage(cur) {
@@ -28,7 +28,8 @@ function convertToPercentage(cur) {
     }
     let base = cur[0];
     if(base == 0){
-        base = 1;
+        console.warn("Can't calculate Percentage because starting-point is 0| Defaulting");
+        return cur;
     }
     for (let i = 0; i < cur.length; i++) {
         cur[i] = (cur[i] - base)/base * 100;
@@ -36,16 +37,17 @@ function convertToPercentage(cur) {
     return cur;
 }
 
-function getBaseIndex(cur){
+function getBaseIndex(xyList){
     // The one series that will have the lowest last value will be treated as base
-    if(cur.length == 0){
+    if(xyList.length == 0){
         return 0;
     }
-    let baseIndex = 0, baseLength = cur[0].length;
-    let lowestValue = cur[0][baseLength - 1];
+    let baseIndex = 0, baseLength = xyList[0][1].length;
+    let lowestValue = xyList[0][1][baseLength - 1];
 
-    for (let i = 1; i < cur.length; i++) {
-        const lastValue = cur[i][cur[i].length - 1];
+    for (let i = 1; i < xyList.length; i++) {
+        let y = xyList[i][1];
+        const lastValue = y[y.length - 1];
         if (lastValue < lowestValue) {
             lowestValue = lastValue;
             baseIndex = i;
@@ -85,4 +87,38 @@ function diffViewUnevenLength(cur, index = -1) {
     return result;
 }
 
-export {diffViewUnevenLength, convertToPercentage2D, getQuaterLabels}
+function diffViewUnevenLengthWithXY(xyList, index = -1) {
+    // Check for uneven lengths in the arrays
+    // Find the base series (array with the lowest last value)
+    if(xyList.length == 0)
+        return xyList;
+    let baseIndex = index;
+    if(index == -1){
+        baseIndex = getBaseIndex(xyList);
+    }
+    // Make a copy because while processing xyList contents will change modifying the baseSeries, Since baseSeries were getting referenced to xyList before
+    const baseSeries = [...xyList[baseIndex]]; 
+    const baseX = [...baseSeries[0]], baseY = [...baseSeries[1]];
+
+    for(let i = 0; i < xyList.length; i++){
+        let curXy = xyList[i];
+        let curX = curXy[0], curY = curXy[1];
+        let baseRunningIndex = 0;
+
+        for(let curIndex = 0; curIndex < curX.length; curIndex++){
+            while(baseRunningIndex < baseX.length){
+                if(baseX[baseRunningIndex] > curX[curIndex]){
+                    // The base-X value is greater than current X,
+                    break; 
+                }
+                baseRunningIndex ++;
+            }
+
+            let subtractVal = (baseRunningIndex == 0 ? baseY[baseRunningIndex]: baseY[baseRunningIndex - 1]);
+            xyList[i][1][curIndex] -= subtractVal;
+        }
+    }
+    return xyList;
+}
+
+export {diffViewUnevenLength, convertToPercentage2D, getQuaterLabels, diffViewUnevenLengthWithXY}

@@ -50,3 +50,6 @@ Done:
 2b. LocalStorage/Export Deployed Bug Resolve
 3b. Examples Addition
 
+
+https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/
+npm install chartjs-plugin-annotation
