@@ -43,7 +43,7 @@ function App() {
   return (
     <div className='mainContent'>
       {/* <p>Hello World</p> */}
-      <HashRouter>
+      <HashRouter basename="/investment_visualiser">
         <Routes>
           <Route path="/play" element={<Play />} />
           <Route path="/plot" element={<TrendPlot />} />
