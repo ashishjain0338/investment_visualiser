@@ -29,14 +29,15 @@ const TaxDataCard = React.memo((props) => {
 
     function loadTableFromPreSetTaxSlabs(index) {
         const clone = obj.clone();
-        clone.taxSlabsRaw = TAX_SLABS[index]['tax-slabs'];
+        clone.updateTaxTable("replace", undefined, undefined, [...TAX_SLABS[index]['tax-slabs']]);
         setobj(clone);
+        props.parentUpdateFxn(props.index, clone);
         setTableCollapse(true);
     }
 
     function addNewTaxRow() {
         const clone = obj.clone();
-        clone.taxSlabsRaw.splice(obj.taxSlabsRaw.length - 1, 0, { limit: 0, rate: 0 });
+        clone.updateTaxTable("add");
         setobj(clone);
         /* Since the new row is 0,0 {Which have no effect on plot-data render}
             So, we decided not to call parent
@@ -44,23 +45,16 @@ const TaxDataCard = React.memo((props) => {
     }
     function deleteEventFromTable(index) {
         const clone = obj.clone();
-        clone.taxSlabsRaw.splice(index, 1);
+        clone.updateTaxTable("delete", index);
         setobj(clone);
+        props.parentUpdateFxn(props.index, clone);
     }
 
     function updateEventFromTable(index, attributeName, value) {
         const clone = obj.clone();
-        clone.updateField(attributeName, value);
-        if (attributeName == "limit") {
-            clone.taxSlabsRaw[index].limit = parseFloat(value);
-        } else if (attributeName == "rate") {
-            clone.taxSlabsRaw[index].rate = parseFloat(value);
-        } else {
-            console.warn(`Invalid AttributeName ${attributeName} in updateEventFromTable`)
-            return;
-        }
-
+        clone.updateTaxTable("update",index, attributeName, value);
         setobj(clone);
+        props.parentUpdateFxn(props.index, clone);
     }
 
     function updateEvent(attributeName, value) {
@@ -68,7 +62,7 @@ const TaxDataCard = React.memo((props) => {
         const clone = obj.clone();
         clone.updateField(attributeName, value);
         setobj(clone);
-        // props.parentUpdateFxn(props.index, clone);
+        props.parentUpdateFxn(props.index, clone);
     }
 
 
