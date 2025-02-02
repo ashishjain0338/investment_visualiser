@@ -36,12 +36,12 @@ function NavBar(props) {
         <div>
             <Navbar bg="light" variant="light" expand="lg" style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <Container>
-                    <Navbar.Brand href="/investment_visualiser">Investment Visualiser</Navbar.Brand>
+                    <Navbar.Brand href="#/investment_visualiser">Investment Visualiser</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Nav className="ms-auto">
-                        <Nav.Link href="/investment_visualiser" style={{ color: "#333" }}>Home</Nav.Link>
-                        <Nav.Link href="/investment_visualiser/tax" style={{ color: "#333" }}>Tax</Nav.Link>
-                        <Nav.Link href="/investment_visualiser/play" style={{ color: "#333" }}>Play</Nav.Link>
+                        <Nav.Link href="#/investment_visualiser" style={{ color: "#333" }}>Home</Nav.Link>
+                        <Nav.Link href="#/investment_visualiser/tax" style={{ color: "#333" }}>Tax</Nav.Link>
+                        <Nav.Link href="#/investment_visualiser/play" style={{ color: "#333" }}>Play</Nav.Link>
                     </Nav>
 
                     <Navbar.Collapse id="basic-navbar-nav">

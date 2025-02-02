@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
 import { HomePage } from './components/homepage/homepage';
 import { NavBar } from './components/navbar/nav_bar';
 import { useState, useCallback, useEffect } from 'react';
@@ -85,7 +85,7 @@ function App() {
         setLoadState={setLoadStateCallBack}
         
       />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/investment_visualiser/play" element={<Play />} />
           <Route path="/plot" element={<TrendPlot />} />
@@ -115,7 +115,7 @@ function App() {
           }
           />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
