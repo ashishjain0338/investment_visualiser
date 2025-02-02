@@ -104,3 +104,10 @@ export function sortedInsertIndex(arr, x) {
 
     return r; // The correct position after which `x` should be inserted
 }
+
+
+export function applyCess(arr, cess = 0.04){
+    for(let i = 0; i < arr.length; i++){
+        arr[i] += arr[i]* cess;
+    }
+}

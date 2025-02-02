@@ -110,6 +110,7 @@ const TaxDataCard = React.memo((props) => {
                                 type="switch"
                                 id="custom-switch"
                                 label="Cess"
+                                onChange={(e) => { updateEvent("cessEnabled", e.target.checked) }}
                             />
                         </InputGroup.Text>
 

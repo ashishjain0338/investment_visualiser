@@ -1,5 +1,5 @@
 import { RawDataCard } from "../components/cards/rawData_input";
-import { convertCSVtoList, updateObjUsingAttrName, sortedInsertIndex } from "./util";
+import { convertCSVtoList, updateObjUsingAttrName, sortedInsertIndex, applyCess } from "./util";
 import { TaxDataCard } from "../components/cards/tax_input";
 
 /*
@@ -109,6 +109,7 @@ class Tax {
             case 'grossIncome':
                 this.userVals = this.computeUserVals();
                 break;
+            case 'cessEnabled':
             case 'deduction':
                 this.preComputed = this.preComputeTaxGraphData();
                 this.userVals = this.computeUserVals();
@@ -138,13 +139,7 @@ class Tax {
                 break;
             }
         }
-
-        // Apply 4% Health & Education Cess
-        let cess = 0;
-        if (this.cessEnabled) {
-            cess = 0.04 * tax;
-        }
-        return tax + cess;
+        return tax;
     }
 
 
@@ -198,12 +193,21 @@ class Tax {
         for (let i = 0; i < x.length; i++) {
             y.push(this.taxFunction(x[i] - this.deduction));
         }
+
+        if (this.cessEnabled){
+            applyCess(y);
+        }
+        
         return [x, y];
     }
 
     preComputeTaxGraphData() {
         let startIncome = 0, endIncome = 30, step = 1;
-        return this.taxFunctionArrayOptimal(startIncome, endIncome, step);
+        let xyList = this.taxFunctionArrayOptimal(startIncome, endIncome, step);
+        if(this.cessEnabled){
+            applyCess(xyList[1]);
+        }
+        return xyList;
     }
 
 
