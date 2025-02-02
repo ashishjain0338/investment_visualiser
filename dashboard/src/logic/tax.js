@@ -1,5 +1,5 @@
 import { RawDataCard } from "../components/cards/rawData_input";
-import { updateObjUsingAttrName } from "./util";
+import { convertCSVtoList, updateObjUsingAttrName, sortedInsertIndex } from "./util";
 import { TaxDataCard } from "../components/cards/tax_input";
 
 /*
@@ -9,7 +9,13 @@ import { TaxDataCard } from "../components/cards/tax_input";
 class Tax {
     taxSlabs;
 
-    constructor(title = "Tax", taxSlabsRaw = [], taxableIncome = "", cessEnabled = false) {
+    constructor(title = "Tax", taxSlabsRaw = [],
+        grossIncome = "", cessEnabled = false,
+        preComputed = undefined, userVals = undefined) {
+        this.title = title;
+        this.cessEnabled = cessEnabled;
+        this.grossIncome = grossIncome;
+
         if (taxSlabsRaw.length == 0 || taxSlabsRaw[taxSlabsRaw.length - 1].limit != Infinity) {
             taxSlabsRaw.push({ limit: Infinity, rate: 30 });
         }
@@ -17,14 +23,19 @@ class Tax {
         // Process raw first
         this.taxSlabs = [...taxSlabsRaw];
         this.taxSlabs.sort((a, b) => a.limit - b.limit);
-        this.preComputed = this.preComputeTaxGraphData();
-        this.title = title;
-        this.taxableIncome = taxableIncome
-        this.cessEnabled = cessEnabled;
+        this.preComputed = preComputed;
+        if (this.preComputed == undefined) {
+            this.preComputed = this.preComputeTaxGraphData();
+        }
+
+        this.userVals = userVals;
+        if (this.userVals == undefined) {
+            this.userVals = this.computeUserVals();
+        }
     }
 
     clone() {
-        return new Tax(this.title, this.taxSlabsRaw, this.taxableIncome, this.cessEnabled);
+        return new Tax(this.title, this.taxSlabsRaw, this.grossIncome, this.cessEnabled, this.preComputed, this.userVals);
     }
 
     info() {
@@ -68,25 +79,15 @@ class Tax {
     }
 
     updateField(attrName, value) {
-        // Needs to updated
-        // switch (attrName) {
-        //     case 'principal':
-        //     case 'rate':
-        //     case 'period':
-        //     case 'premature':
-        //         value = parseFloat(value);
-        //         if (isNaN(value)) {
-        //             value = 0;
-        //         }
-        //     case 'cumulative_freq':
-        //         value = parseInt(value);
-        //         if (isNaN(value)) {
-        //             value = 0;
-        //         }
-        //     default:
-        //     // Do nothing
-        // }
         updateObjUsingAttrName(this, attrName, value);
+        // Post-process
+        switch (attrName) {
+            case 'grossIncome':
+                this.userVals = this.computeUserVals();
+                break;
+            default:
+            // Do nothing
+        }
     }
 
     taxFunction(taxableIncome) {
@@ -111,6 +112,8 @@ class Tax {
         }
         return tax + cess;
     }
+
+
 
     taxFunctionArrayOptimal(startIncome, endIncome = 10, step = 0.1) {
         let curTaxSlab = 0;
@@ -149,7 +152,16 @@ class Tax {
         return [x, y];
     }
 
-    preComputeTaxGraphData(){
+    computeUserVals() {
+        let x = convertCSVtoList(this.grossIncome);
+        let y = []
+        for (let i = 0; i < x.length; i++) {
+            y.push(this.taxFunction(x[i]));
+        }
+        return [x, y];
+    }
+
+    preComputeTaxGraphData() {
         let startIncome = 0, endIncome = 30, step = 1;
         return this.taxFunctionArrayOptimal(startIncome, endIncome, step);
     }
@@ -169,8 +181,32 @@ class Tax {
         return minSlabWidth / 2;
     }
 
+    mergePreComputedAndUserVals() {
+        console.log("Merge Pre Computing : ", this.userVals);
+        if (this.userVals == undefined) {
+            return this.preComputed;
+        }
+        let [preX, preY] = this.preComputed;
+        let [userX, userY] = this.userVals;
+        let outX = [...preX], outY = [...preY];
+        // x-axis must be sorted
+        userX.map((val, index) => {
+            console.log("Check-me : ", index, val);
+            let indexAfterAdd = sortedInsertIndex(outX, val);
+            outX.splice(indexAfterAdd + 1, 0, val);
+            outY.splice(indexAfterAdd + 1, 0,userY[index]);
+        }
+        )
+
+        return [outX, outY];
+    }
+
     getDataForPlot(period) {
-       return this.preComputed;
+        // let userVals = this.userVals;
+        // this.mergePreComputedAndUserVals();
+        return this.mergePreComputedAndUserVals();
+        return this.preComputed;
+        // return userVals;
     }
 
     getReactComponent(index, parentUpdateFxn, deleteFxn, duplicateFxn) {

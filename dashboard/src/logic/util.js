@@ -77,3 +77,30 @@ export function getYearQuaterinArray(requiredSize){
     }
     return out;
 }
+
+/*
+    Returns the index after which you should add x to maintain sorted array
+*/
+export function sortedInsertIndex(arr, x) {
+    if (arr.length === 0) return -1; // Empty array, insert at 0
+    if (arr[0] >= x) return -1;      // Insert before the first element
+    if (arr[arr.length - 1] < x) return arr.length - 1; // Insert at the end
+
+    let l = 0, r = arr.length - 1;
+
+    while (l <= r) {
+        let mid = Math.floor((l + r) / 2);
+
+        if (arr[mid] === x) {
+            return mid; // If `x` already exists, return its position
+        } else if (arr[mid] < x && arr[mid + 1] > x) {
+            return mid; // Found correct position
+        } else if (arr[mid] < x) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+
+    return r; // The correct position after which `x` should be inserted
+}

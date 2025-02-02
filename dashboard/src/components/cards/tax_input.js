@@ -99,10 +99,10 @@ const TaxDataCard = React.memo((props) => {
 
                     <hr></hr>
                     <InputGroup className="mb-3">
-                        <InputGroup.Text>Taxable-Income</InputGroup.Text>
-                        <Form.Control aria-label="Taxable-Income"
+                        <InputGroup.Text>Gross-Income</InputGroup.Text>
+                        <Form.Control aria-label="Gross-Income"
                             value={obj.taxableIncome}
-                            onChange={(e) => { updateEvent("taxableIncome", e.target.value) }}
+                            onChange={(e) => { updateEvent("grossIncome", e.target.value) }}
                         />
                         <InputGroup.Text>
                             <Button className="btn btn-light" 

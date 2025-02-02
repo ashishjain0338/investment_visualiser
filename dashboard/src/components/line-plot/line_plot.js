@@ -3,6 +3,9 @@ import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { useEffect, useState } from "react";
 import { diffViewUnevenLength, convertToPercentage2D, getQuaterLabels } from "./helper";
+import annotationPlugin from 'chartjs-plugin-annotation';
+
+Chart.register(annotationPlugin);
 
 const intialData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -20,24 +23,7 @@ const intialData = {
         }
     ]
 }
-const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-        position: "none"
-    },
-    scales: {
-        x: {
-            type: "linear",
-        },
-        y: {
-            title: {
-                display: true,
-                text: 'Amount (Rs)'
-            },
-        }
-    }
-}
+
 const colorCombinations = [
     // Combination 1 (Vibrant Pastel Theme)
     ["#4DB8FF", "#58D68D", "#FFA07A", "#C39BD3", "#FFD700", "#FF6F61"],
@@ -62,6 +48,47 @@ let selectedColors = [
     "#4DB8FF", "#58D68D", "#FFA07A", "#C39BD3", "#FFD700", "#FF6F61",
     "#87CEFA", "#FF69B4", "#32CD32", "#FFA500", "#9370DB", "#FFFACD"
 ];
+
+const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+        position: "none"
+    },
+    scales: {
+        x: {
+            type: "linear",
+        },
+        y: {
+            title: {
+                display: true,
+                text: 'Amount (Rs)'
+            },
+        }
+    },
+    plugins: {
+        annotation: {
+            annotations: {
+
+                point1: {
+                    type: 'point',
+                    xValue: 12,
+                    yValue: 5,
+                    backgroundColor: 'rgba(255, 99, 132, 0.25)',
+                    shadowBlur : 15,
+                },
+                point2: {
+                    type: 'point',
+                    xValue: 15,
+                    yValue: 2.65,
+                    backgroundColor: selectedColors[0],
+                    borderWidth: 1.5,
+                },
+            }
+        }
+    }
+}
+
 function TrendPlot(props) {
     const [data, setdata] = useState(intialData);
 
@@ -72,7 +99,7 @@ function TrendPlot(props) {
             let xList = [], yList = [];
             for (let i = 0; i < props.state.length; i++) {
                 let obj = props.state[i]
-                
+
                 let [x, y] = obj.getDataForPlot(obj.period);
                 xList.push(x);
                 yList.push(y);
@@ -92,7 +119,7 @@ function TrendPlot(props) {
             for (let i = 0; i < yList.length; i++) {
                 // Combine x, y : Convert CollectData[i] --> x,y
                 let inter = [];
-                for(let j = 0; j < yList[i].length; j++){
+                for (let j = 0; j < yList[i].length; j++) {
                     inter.push({
                         x: xList[i][j],
                         y: yList[i][j]
@@ -107,6 +134,8 @@ function TrendPlot(props) {
                     datasets: out
                 }
             );
+
+            // 
         },
         [props.state, props.indexUpdated, props.percentageView, props.diffView, props.diffIndex]
     )
@@ -125,7 +154,7 @@ function TrendPlot(props) {
             pointBorderWidth: 8,
             pointHoverRadius: 8,
             pointHoverBorderWidth: 3,
-            pointRadius: 3,
+            pointRadius: 2,
         }
         return out;
     }
