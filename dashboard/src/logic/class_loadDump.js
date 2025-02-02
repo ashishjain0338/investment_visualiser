@@ -28,7 +28,12 @@ function LoadClass(dumpedString) {
 
   // Create a new instance of the class and assign properties
   const instance = new classRegistry[className]();
-  Object.assign(instance, properties);
+  // Object.assign(instance, properties); // Old Way
+  // Assign the properties using updateField Method of each class-instance
+  for (let attributeName in properties) {
+    instance.updateField(attributeName, properties[attributeName])
+  }
+  
 
   // return instance;
   return instance;

@@ -128,10 +128,12 @@ function Main(props) {
 
     function loadState(newState) {
         try {
+            // console.log("LoadState : ", newState);
             let stateList = []
             for (let i = 0; i < newState['state'].length; i++) {
                 let loadedInstance = LoadClass(newState['state'][i]);
                 let className = loadedInstance.getClassName();
+                console.log(loadedInstance);
                 if (props.enabledCards.includes(className)) {
                     stateList.push(loadedInstance);
                 }

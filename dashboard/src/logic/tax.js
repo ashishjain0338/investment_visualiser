@@ -73,6 +73,7 @@ class Tax {
                 break;
             case "replace":
                 this.taxSlabsRaw = value;
+
                 break;
             case "add":
                 this.taxSlabsRaw.splice(this.taxSlabsRaw.length - 1, 0, { limit: 0, rate: 0 });
@@ -97,7 +98,14 @@ class Tax {
                 if (isNaN(value)) {
                     value = 0;
                 }
-
+                break;
+            case 'taxSlabsRaw':
+                for(let i = 0;i < value.length; i++){
+                    if(value[i].limit == null){
+                        // During Dump, infinity is changed to null, overriding that
+                        value[i].limit = Infinity;
+                    }
+                }
                 break;
             default:
             //Do-Nothing
@@ -111,6 +119,12 @@ class Tax {
                 break;
             case 'cessEnabled':
             case 'deduction':
+                this.preComputed = this.preComputeTaxGraphData();
+                this.userVals = this.computeUserVals();
+                break;
+            case 'taxSlabsRaw':
+                console.log("here");
+                this.taxSlabs = this.taxSlabsRaw.sort((a, b) => a.limit - b.limit);
                 this.preComputed = this.preComputeTaxGraphData();
                 this.userVals = this.computeUserVals();
                 break;
@@ -145,8 +159,12 @@ class Tax {
 
 
     taxFunctionArrayOptimal(startIncome, endIncome = 10, step = 0.1) {
+        // console.log("Precomputing with Tax slabs : ", this.taxSlabs)
         let curTaxSlab = 0;
         let ySize = Math.floor((endIncome - startIncome) / step + 1);
+        if(ySize == 0){
+            return [[], []]
+        }
         let y = new Array(ySize), x = new Array(ySize);
         y[0] = this.taxFunction(startIncome - this.deduction);
         x[0] = startIncome;
