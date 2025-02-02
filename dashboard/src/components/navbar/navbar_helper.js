@@ -1,9 +1,12 @@
 import { examples } from "../../saved_states/example";
 import { ListGroup } from "react-bootstrap";
 
-function getExamplesHTML(changeDefaultStateFromExamples, closePopupFxn) {
+function getExamplesHTML(changeDefaultStateFromExamples, closePopupFxn, pageId) {
     let out = []
     for (let i = 0; i < examples.length; i++) {
+        let curPageId = examples[i]["pageId"];
+        if(curPageId != pageId)
+            continue;
         let title = examples[i]["title"];
         out.push(
             <ListGroup.Item

@@ -104,7 +104,7 @@ function Main(props) {
 
     useEffect(() => {
         if (props.stateSaveSignal != -1) {
-            saveToLocalStorage("savedState", getStateForStorage());
+            saveToLocalStorage(`savedState_pageId_${props.pageId}`, getStateForStorage());
             alert('Saved');
         }
     }, [props.stateSaveSignal])

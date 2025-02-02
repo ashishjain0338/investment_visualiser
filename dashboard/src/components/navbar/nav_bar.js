@@ -2,7 +2,7 @@ import { Navbar, Nav, Button, Container, Modal, ListGroup } from "react-bootstra
 import { useState } from 'react';
 import { getExamplesHTML } from "./navbar_helper";
 
-function NavBar(props) {
+function MyNavBar(props) {
     const [show, setShow] = useState(false);
 
     const popUpClose = () => setShow(false);
@@ -30,17 +30,21 @@ function NavBar(props) {
         }
     };
 
-
+    function performReload(newHash){
+        window.location.hash = newHash
+        window.location.reload()
+    }
 
     return (
         <div>
             <Navbar bg="light" variant="light" expand="lg" style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <Container>
-                    <Navbar.Brand href="#/investment_visualiser">Investment Visualiser</Navbar.Brand>
+                    <Navbar.Brand onClick={() => {performReload("#/investment_visualiser")}} href="#/investment_visualiser">Investment Visualiser</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Nav className="ms-auto">
-                        <Nav.Link href="#/investment_visualiser" style={{ color: "#333" }}>Home</Nav.Link>
-                        <Nav.Link href="#/investment_visualiser/tax" style={{ color: "#333" }}>Tax</Nav.Link>
+                        {/* WE need reload, for the useEffect to get called for loading Different States for different pageId */}
+                        <Nav.Link href="#/investment_visualiser"  onClick={() => {performReload("#/investment_visualiser")}} style={{ color: "#333" }}>Home</Nav.Link>
+                        <Nav.Link href="#/investment_visualiser/tax" onClick={() => {performReload("#/investment_visualiser/tax")}} style={{ color: "#333" }}>Tax</Nav.Link>
                         <Nav.Link href="#/investment_visualiser/play" style={{ color: "#333" }}>Play</Nav.Link>
                     </Nav>
 
@@ -69,7 +73,7 @@ function NavBar(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <ListGroup>
-                        {getExamplesHTML(props.changeDefaultStateFromExamples, popUpClose)}
+                        {getExamplesHTML(props.changeDefaultStateFromExamples, popUpClose, props.pageId)}
                     </ListGroup>
 
                 </Modal.Body>
@@ -80,4 +84,4 @@ function NavBar(props) {
     );
 }
 
-export { NavBar }
+export { MyNavBar }
