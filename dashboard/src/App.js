@@ -45,9 +45,9 @@ function App() {
       {/* <p>Hello World</p> */}
       <HashRouter>
         <Routes>
-          <Route path="/investment_visualiser/play" element={<Play />} />
+          <Route path="/play" element={<Play />} />
           <Route path="/plot" element={<TrendPlot />} />
-          <Route path="/investment_visualiser" element={
+          <Route path="/" element={
             <HomePage
               enabledCards={["FD", "RawData", "SIP"]}
               plotSettings={defaultplotSettings}
@@ -56,7 +56,7 @@ function App() {
           }
           />
 
-          <Route path="/investment_visualiser/tax" element={
+          <Route path="/tax" element={
             <HomePage
               enabledCards={["Tax"]}
               plotSettings={{ ...defaultplotSettings, highlightPoints: true }}
@@ -65,14 +65,7 @@ function App() {
           }
           />
 
-          <Route path="/" element={
-            <HomePage
-              enabledCards={["Tax"]}
-              plotSettings={{ ...defaultplotSettings, highlightPoints: true }}
-
-            />
-          }
-          />
+          {/* <Route path="/" element={window.location.hash = "#/investment_visualiser"}/> */}
         </Routes>
       </HashRouter>
     </div>

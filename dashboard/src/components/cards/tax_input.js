@@ -93,7 +93,7 @@ const TaxDataCard = React.memo((props) => {
                     <InputGroup className="mb-3">
                         <InputGroup.Text>Gross-Income</InputGroup.Text>
                         <Form.Control aria-label="Gross-Income"
-                            value={obj.taxableIncome}
+                            value={obj.grossIncome}
                             onChange={(e) => { updateEvent("grossIncome", e.target.value) }}
                         />
                     </InputGroup>
@@ -101,7 +101,7 @@ const TaxDataCard = React.memo((props) => {
                         <InputGroup.Text>Net-Deductions (Lakhs)</InputGroup.Text>
                         <Form.Control aria-label="Net-Deduction"
                             type="number"
-                            value={obj.taxableIncome}
+                            value={obj.deduction}
                             onChange={(e) => { updateEvent("deduction", e.target.value) }}
                         />
 

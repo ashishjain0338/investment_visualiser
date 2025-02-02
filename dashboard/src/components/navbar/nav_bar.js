@@ -39,13 +39,13 @@ function MyNavBar(props) {
         <div>
             <Navbar bg="light" variant="light" expand="lg" style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                 <Container>
-                    <Navbar.Brand onClick={() => {performReload("#/investment_visualiser")}} href="#/investment_visualiser">Investment Visualiser</Navbar.Brand>
+                    <Navbar.Brand  href="#/" onClick={() => {performReload("#/")}}>Investment Visualiser</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Nav className="ms-auto">
                         {/* WE need reload, for the useEffect to get called for loading Different States for different pageId */}
-                        <Nav.Link href="#/investment_visualiser"  onClick={() => {performReload("#/investment_visualiser")}} style={{ color: "#333" }}>Home</Nav.Link>
-                        <Nav.Link href="#/investment_visualiser/tax" onClick={() => {performReload("#/investment_visualiser/tax")}} style={{ color: "#333" }}>Tax</Nav.Link>
-                        <Nav.Link href="#/investment_visualiser/play" style={{ color: "#333" }}>Play</Nav.Link>
+                        <Nav.Link href="#/"  onClick={() => {performReload("#/")}} style={{ color: "#333" }}>Home</Nav.Link>
+                        <Nav.Link href="#/tax" onClick={() => {performReload("#/tax")}} style={{ color: "#333" }}>Tax</Nav.Link>
+                        <Nav.Link href="#/play" style={{ color: "#333" }}>Play</Nav.Link>
                     </Nav>
 
                     <Navbar.Collapse id="basic-navbar-nav">
