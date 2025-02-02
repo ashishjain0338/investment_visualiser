@@ -3,13 +3,9 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { Trash, Duplicate, Plus, ColumnGap, CaretDownFill, CaretUpFill } from "../icons/icons";
 import './card.css'
-import { Tax } from "../../logic/tax";
 import { TAX_SLABS } from "../../saved_states/taxSlab";
 
 const TaxDataCard = React.memo((props) => {
-    // const [obj, setobj] = useState(props.obj)
-    let testObj = new Tax("New", [{ limit: 400, rate: 70 }, { limit: 30, rate: 45 }], "");
-    // const [obj, setobj] = useState(testObj)
     const [obj, setobj] = useState(props.obj);
     const [tableCollapse, setTableCollapse] = useState(true);
     useEffect(() => {
@@ -52,7 +48,7 @@ const TaxDataCard = React.memo((props) => {
 
     function updateEventFromTable(index, attributeName, value) {
         const clone = obj.clone();
-        clone.updateTaxTable("update",index, attributeName, value);
+        clone.updateTaxTable("update", index, attributeName, value);
         setobj(clone);
         props.parentUpdateFxn(props.index, clone);
     }
@@ -68,10 +64,6 @@ const TaxDataCard = React.memo((props) => {
 
     return (
         <div >
-            {/* <Button variant="primary" onClick={() => setShowTable(!showTable)}>
-                {showTable ? "Hide Table" : "Show Table"}
-            </Button> */}
-
             {/* {JSON.stringify(obj)} */}
             <Card className="mycard" >
                 <Card.Body >
@@ -104,15 +96,31 @@ const TaxDataCard = React.memo((props) => {
                             value={obj.taxableIncome}
                             onChange={(e) => { updateEvent("grossIncome", e.target.value) }}
                         />
+                    </InputGroup>
+                    <InputGroup className="sm-3">
+                        <InputGroup.Text>Net-Deductions (Lakhs)</InputGroup.Text>
+                        <Form.Control aria-label="Net-Deduction"
+                            type="number"
+                            value={obj.taxableIncome}
+                            onChange={(e) => { updateEvent("deduction", e.target.value) }}
+                        />
+
                         <InputGroup.Text>
-                            <Button className="btn btn-light" 
+                            <Form.Check // prettier-ignore
+                                type="switch"
+                                id="custom-switch"
+                                label="Cess"
+                            />
+                        </InputGroup.Text>
+
+                        <InputGroup.Text>
+                            <Button className="btn btn-light"
                                 onClick={() => setTableCollapse(!tableCollapse)}
                             >
                                 {tableCollapse ? <CaretUpFill /> : <CaretDownFill />}
                             </Button>
                         </InputGroup.Text>
                     </InputGroup>
-
                     {/* New Code */}
                     <Collapse in={tableCollapse}>
                         <div>

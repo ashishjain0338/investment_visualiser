@@ -10,15 +10,26 @@ class Tax {
     taxSlabs;
 
     constructor(title = "Tax", taxSlabsRaw = [],
-        grossIncome = "", cessEnabled = false,
+        grossIncome = "", deduction = 0, cessEnabled = false,
         preComputed = undefined, userVals = undefined) {
+
         this.title = title;
         this.cessEnabled = cessEnabled;
         this.grossIncome = grossIncome;
+        this.deduction = deduction;
 
-        if (taxSlabsRaw.length == 0 || taxSlabsRaw[taxSlabsRaw.length - 1].limit != Infinity) {
+
+        if (taxSlabsRaw.length == 0) {
             taxSlabsRaw.push({ limit: Infinity, rate: 30 });
         }
+        let lastTaxLimit = taxSlabsRaw[taxSlabsRaw.length - 1].limit
+        if (lastTaxLimit == null) {
+            // The Infinity changes to null when it is saved and loaded
+            taxSlabsRaw[taxSlabsRaw.length - 1].limit = Infinity;
+        } else if (lastTaxLimit != Infinity) {
+            taxSlabsRaw.push({ limit: Infinity, rate: 30 });
+        }
+
         this.taxSlabsRaw = taxSlabsRaw;
         // Process raw first
         this.taxSlabs = [...taxSlabsRaw];
@@ -35,7 +46,7 @@ class Tax {
     }
 
     clone() {
-        return new Tax(this.title, this.taxSlabsRaw, this.grossIncome, this.cessEnabled, this.preComputed, this.userVals);
+        return new Tax(this.title, this.taxSlabsRaw, this.grossIncome, this.deduction, this.cessEnabled, this.preComputed, this.userVals);
     }
 
     info() {
@@ -79,10 +90,27 @@ class Tax {
     }
 
     updateField(attrName, value) {
+        //Pre-Proces
+        switch (attrName) {
+            case 'deduction':
+                value = parseFloat(value);
+                if (isNaN(value)) {
+                    value = 0;
+                }
+
+                break;
+            default:
+            //Do-Nothing
+        }
+
         updateObjUsingAttrName(this, attrName, value);
         // Post-process
         switch (attrName) {
             case 'grossIncome':
+                this.userVals = this.computeUserVals();
+                break;
+            case 'deduction':
+                this.preComputed = this.preComputeTaxGraphData();
                 this.userVals = this.computeUserVals();
                 break;
             default:
@@ -90,11 +118,13 @@ class Tax {
         }
     }
 
-    getHighlightPoints(){
+    getHighlightPoints() {
         return convertCSVtoList(this.grossIncome);
     }
 
     taxFunction(taxableIncome) {
+        if (taxableIncome < 0)
+            return 0;
         let tax = 0;
         let previousLimit = 0;
 
@@ -123,9 +153,16 @@ class Tax {
         let curTaxSlab = 0;
         let ySize = Math.floor((endIncome - startIncome) / step + 1);
         let y = new Array(ySize), x = new Array(ySize);
-        y[0] = this.taxFunction(startIncome)
+        y[0] = this.taxFunction(startIncome - this.deduction);
         x[0] = startIncome;
-        for (let income = startIncome + step, i = 1; income <= endIncome; income += step, i++) {
+        for (let grossIncome = startIncome + step, i = 1; grossIncome <= endIncome; grossIncome += step, i++) {
+            let income = grossIncome - this.deduction;
+            // console.log("Check me : ", grossIncome, income, this.deduction);
+            x[i] = grossIncome;
+            if (income <= 0) {
+                y[i] = 0;
+                continue;
+            }
             if (income <= this.taxSlabs[curTaxSlab].limit) {
                 /*  This signifies taxSlab is not changed
                     Additional income from previous is step,
@@ -143,7 +180,6 @@ class Tax {
                 let incomeCurRate = income - prevTaxLimit;
                 y[i] = y[i - 1] + incomePrevRate * prevTaxRate + incomeCurRate * newTaxRate;
             }
-            x[i] = income;
 
             //A Test-Check (Uncomment for checking)
             // if(y[i] != this.taxFunction(income)){
@@ -160,7 +196,7 @@ class Tax {
         let x = convertCSVtoList(this.grossIncome);
         let y = []
         for (let i = 0; i < x.length; i++) {
-            y.push(this.taxFunction(x[i]));
+            y.push(this.taxFunction(x[i] - this.deduction));
         }
         return [x, y];
     }
@@ -196,7 +232,7 @@ class Tax {
         userX.map((val, index) => {
             let indexAfterAdd = sortedInsertIndex(outX, val);
             outX.splice(indexAfterAdd + 1, 0, val);
-            outY.splice(indexAfterAdd + 1, 0,userY[index]);
+            outY.splice(indexAfterAdd + 1, 0, userY[index]);
         }
         )
 

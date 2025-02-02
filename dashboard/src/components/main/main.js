@@ -21,19 +21,19 @@ let testStateRaw_FD = [
     new RawData("Raw", "100000, 101000, 102000, 105000, 102000, 101000")
 ]
 
-let testTaxState = [
-    new Tax("First", [{ limit: 400, rate: 70 }, { limit: 30, rate: 45 }], ""),
-]
+// let testTaxState = [
+//     new Tax("First", [{ limit: 400, rate: 70 }, { limit: 30, rate: 45 }], ""),
+// ]
 
 let MASTER_TESTING = false;
-let MASTER_STATE = testTaxState;
+let MASTER_STATE = undefined;
 
 // EnabledCards & theirCardClassName MUST BE SAME
 var enabledCards = ["FD", "RawData", "sip", "tax"];
 // var enabledCards = ["RawData"];
 
 function Main(props) {
-    const [state, setState] = useState(testTaxState)
+    const [state, setState] = useState([])
     // This state-variable will signal TrendPlot to only re-calculate this index
 
     const [indexUpdated, setIndexUpdated] = useState(-1);
@@ -136,6 +136,7 @@ function Main(props) {
                     stateList.push(loadedInstance);
                 }
             }
+            
             setpercentageView(newState['percentage-view']);
             setdiffView(newState['diff-view'])
             setDiffIndex(-1);
